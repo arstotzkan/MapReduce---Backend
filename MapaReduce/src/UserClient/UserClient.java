@@ -27,7 +27,7 @@ public class UserClient extends Thread {
 			out = new ObjectOutputStream(requestSocket.getOutputStream());
 			in = new ObjectInputStream(requestSocket.getInputStream());
 			/* Write the two integers */
-			GPXFile file = new GPXFile("C:\\Users\\panos\\IdeaProjects\\untitled\\src\\UserClient\\gpxs\\route1.gpx");
+			GPXFile file = new GPXFile(this.filename);
 			out.writeObject(file);
 			out.flush();
 			/* Print the received result from server */
