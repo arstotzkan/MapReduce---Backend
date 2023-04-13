@@ -3,17 +3,14 @@ import java.io.*;
 import java.net.*;
 
 public class MasterServer {
-    public static void main(String args[]) {
-		new MasterServer().openServer();
-	}
-	
+
 	/* Define the socket that receives requests */
 	ServerSocket socketForUsers;
 	ServerSocket socketForWorkers;
 	/* Define the socket that is used to handle the connection */
 	Socket userProviderSocket;
 	Socket workerProviderSocket;
-	void openServer() {
+	public void openServer() {
 		try {
 
 			/* Create Server Socket */

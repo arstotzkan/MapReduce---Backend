@@ -7,7 +7,7 @@ import java.net.*;
 
 public class WorkerClient extends Thread {
 
-	WorkerClient() {
+	public WorkerClient() {
 	}
 
 	public void run() {
@@ -46,10 +46,5 @@ public class WorkerClient extends Thread {
 				ioException.printStackTrace();
 			}
 		}
-	}
-
-
-	public static void main(String[] args) {
-		new WorkerClient().start();
 	}
 }

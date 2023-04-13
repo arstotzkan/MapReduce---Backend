@@ -8,7 +8,7 @@ import utils.GPXStatistics;
 
 public class UserClient extends Thread {
 	String filename;
-	UserClient(String filename) {
+	public UserClient(String filename) {
 		this.filename = filename;
 	}
 
@@ -48,12 +48,5 @@ public class UserClient extends Thread {
 				ioException.printStackTrace();
 			}
 		}
-	}
-
-
-	public static void main(String[] args) {
-		new UserClient("gpxs\\route1.gpx").start();
-		new UserClient("gpxs\\route2.gpx").start();
-		new UserClient("gpxs\\route3.gpx").start();
 	}
 }
