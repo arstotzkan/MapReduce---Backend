@@ -18,6 +18,8 @@ public class MasterServer {
 			socketForWorkers = new ServerSocket(4322, 10); //socket for workers
 
 			while (true) {
+				//TODO: find way to respond to worker when user has sent file
+
 				/* Accept the connection */
 				userProviderSocket = socketForUsers.accept();
 				System.out.println(userProviderSocket.getRemoteSocketAddress().toString() + "sent:");
