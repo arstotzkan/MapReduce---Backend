@@ -17,21 +17,22 @@ public class WorkerClient extends Thread {
 
 
 		try {
-			String host = "localhost";
-			/* Create socket for contacting the server on port 4321*/
-			requestSocket = new Socket(host,4322);
+			while (true) {
+				String host = "localhost";
+				/* Create socket for contacting the server on port 4321*/
+				requestSocket = new Socket(host, 4322);
 
-			/* Create the streams to send and receive data from server */
-			out = new ObjectOutputStream(requestSocket.getOutputStream());
-			in = new ObjectInputStream(requestSocket.getInputStream());
-			/* Write the two integers */
-			Workload t = new Workload();
-			out.writeObject(t);
-			out.flush();
-			/* Print the received result from server */
-			Workload t2 = (Workload) in.readObject();
-			System.out.println("Server>" + t2.isGiven() );
-
+				/* Create the streams to send and receive data from server */
+				out = new ObjectOutputStream(requestSocket.getOutputStream());
+				in = new ObjectInputStream(requestSocket.getInputStream());
+				/* Write the two integers */
+				Workload t = new Workload();
+				out.writeObject(t);
+				out.flush();
+				/* Print the received result from server */
+				Workload t2 = (Workload) in.readObject();
+				System.out.println("Server>" + t2.isGiven());
+			}
 		} catch (UnknownHostException unknownHost) {
 			System.err.println("You are trying to connect to an unknown host!");
 		}catch(ClassNotFoundException e){
@@ -47,4 +48,6 @@ public class WorkerClient extends Thread {
 			}
 		}
 	}
+
+
 }
