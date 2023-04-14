@@ -32,6 +32,10 @@ public class WorkerClient extends Thread {
 				/* Print the received result from server */
 				Workload t2 = (Workload) in.readObject();
 				System.out.println("Server>" + t2.isGiven());
+
+				//TODO: calculate from chunk
+				//TODO: send calculated data from chunk
+				//TODO: receive clear
 			}
 		} catch (UnknownHostException unknownHost) {
 			System.err.println("You are trying to connect to an unknown host!");
