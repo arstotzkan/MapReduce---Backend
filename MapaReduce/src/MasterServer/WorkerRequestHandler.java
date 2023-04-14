@@ -20,10 +20,20 @@ ObjectOutputStream out;
 
 	public void run() {
 		try {
-				Workload t = (Workload) in.readObject();
-				t.setGiven(true);
-				out.writeObject(t);
-				out.flush();
+				Object request = (Object) in.readObject();
+				if(request.getClass().getSimpleName().equals("Workload")){
+					Workload t = (Workload) request;
+					t.setGiven(true);
+					out.writeObject(t);
+					out.flush();
+				}
+				else if (request.getClass().getSimpleName().equals("GPXStatistics")){
+					//reduce phase propably goes here
+					GPXStatistics t = (GPXStatistics) request;
+					out.writeObject(t);
+					out.flush();
+				}
+
 	
 		} catch (IOException e) {
 			e.printStackTrace();
