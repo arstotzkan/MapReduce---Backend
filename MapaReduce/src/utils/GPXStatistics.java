@@ -30,4 +30,20 @@ public class GPXStatistics implements Serializable {
     public int getTotalExerciseTime() {
         return totalExerciseTime;
     }
+
+    public void setTotalDistance(double totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
+    public void setAverageSpeed(double averageSpeed) {
+        this.averageSpeed = averageSpeed;
+    }
+
+    public void setTotalElevation(double totalElevation) {
+        this.totalElevation = totalElevation;
+    }
+
+    public void setTotalExerciseTime(int totalExerciseTime) {
+        this.totalExerciseTime = totalExerciseTime;
+    }
 }
