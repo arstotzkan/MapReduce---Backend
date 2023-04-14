@@ -1,7 +1,7 @@
 package utils;
 
 public class Workload {
-    boolean given = false;
+    private boolean given = false;
 
     public boolean isGiven() {
         return given;
