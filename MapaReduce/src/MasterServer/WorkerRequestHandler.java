@@ -5,8 +5,9 @@ import utils.Workload;
 import java.io.*;
 import java.net.*;
 public class WorkerRequestHandler extends Thread {
-ObjectInputStream in;
-ObjectOutputStream out;
+	ObjectInputStream in;
+	ObjectOutputStream out;
+	ArrayList<GPXWaypoint> chunks;
 
 	public WorkerRequestHandler(Socket connection) {
 		try {
@@ -24,13 +25,16 @@ ObjectOutputStream out;
 				if(request.getClass().getSimpleName().equals("Workload")){
 					Workload t = (Workload) request;
 					t.setGiven(true);
+					//t.setContent(chunks); //send content
 					out.writeObject(t);
 					out.flush();
 				}
 				else if (request.getClass().getSimpleName().equals("GPXStatistics")){
 					//reduce phase propably goes here
 					GPXStatistics t = (GPXStatistics) request;
-					out.writeObject(t);
+					//somehow return this into main program
+					Workload res = new Workload()
+					out.writeObject(res);
 					out.flush();
 				}
 
@@ -47,6 +51,14 @@ ObjectOutputStream out;
 				ioException.printStackTrace();
 			}
 		}
+	}
+
+	public ArrayList<GPXWaypoint> getChunks() {
+		return chunks;
+	}
+
+	public void setChunks(ArrayList<GPXWaypoint> chunks) {
+		this.chunks = chunks;
 	}
 
 	public GPXStatistics reduce(GPXStatistics[] chunks){
