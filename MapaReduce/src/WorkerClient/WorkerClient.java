@@ -32,7 +32,7 @@ public class WorkerClient extends Thread {
 				out.flush();
 				/* Print the received result from server */
 				workload = (Workload) in.readObject();
-				System.out.println("Server>" + workload.isGiven());
+				System.out.println("Server>" + workload.getContent());
 
 
 				requestSocket = new Socket(host, 4322);
