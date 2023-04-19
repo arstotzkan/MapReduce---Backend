@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import utils.GPXFile;
+import utils.GPXParser;
 import utils.GPXStatistics;
 import utils.GPXWaypoint;
 
@@ -55,8 +56,15 @@ public class UserRequestHandler extends Thread {
 		//get content between <ele></ele>
 		//get content between <time></time>
 		//TODO in next couple of days
-		String stringData = new String(file.getContent(), StandardCharsets.UTF_8);
-		GPXParser parser = new GPXParser();
-		return parser.parseGPX(stringData);
+		try{
+			String stringData = new String(file.getContent(), StandardCharsets.UTF_8);
+			GPXParser parser = new GPXParser();
+			return parser.parseGPX(stringData);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<GPXWaypoint>();
+		}
+
 	}
 }

@@ -1,5 +1,6 @@
-package UserClient;
+package WorkerClient;
 
+import utils.GPXStatistics;
 import utils.Workload;
 
 import java.io.*;
@@ -38,7 +39,7 @@ public class WorkerClient extends Thread {
 				//TODO: calculate from chunk
 				//TODO: send calculated data from chunk
 				GPXStatistics stat = new GPXStatistics(0.0, 0.0, 0.0, 0);
-				out.writeObject(t);
+				out.writeObject(stat);
 				out.flush();
 
 				Workload finalResponse = (Workload) in.readObject();
