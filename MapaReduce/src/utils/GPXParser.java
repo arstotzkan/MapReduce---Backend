@@ -41,8 +41,6 @@ public class GPXParser {
      * @throws ParseException
      */
     public static ArrayList<GPXWaypoint> parseGPX(String gpxPath) throws ParserConfigurationException, IOException, SAXException, ParseException {
-
-    }
         Document doc = readGPX(gpxPath);
         NodeList nodeList = doc.getElementsByTagName("*");
         ArrayList<GPXWaypoint> waypoints = new ArrayList<GPXWaypoint>();
