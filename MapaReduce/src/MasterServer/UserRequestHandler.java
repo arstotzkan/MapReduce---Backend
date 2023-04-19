@@ -31,6 +31,7 @@ public class UserRequestHandler extends Thread {
 	public void run() {
 		try {
 			GPXFile file = (GPXFile) in.readObject();
+			System.out.println(this.breakToWaypoints(file));
 			GPXStatistics stats = new GPXStatistics(100.0, 10.0, 0.0, 300);
 			out.writeObject(stats);
 			out.flush();
