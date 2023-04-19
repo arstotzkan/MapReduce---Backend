@@ -1,8 +1,9 @@
 package utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Workload {
+public class Workload implements Serializable {
     private boolean given = false;
     private ArrayList<GPXWaypoint> content= new ArrayList<GPXWaypoint>();
     
