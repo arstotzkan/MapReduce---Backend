@@ -70,8 +70,7 @@ public class GPXParser {
                     String[] textArr = textContent.split(" ");
                     List<String> filtered =  Arrays.stream(textArr).toList().stream().filter(x -> !x.isEmpty()).toList();
                     tempEle = filtered.get(0);
-                    tempTime = filtered.get(1);
-                    tempTime = tempTime.replace("T", " ").replace("Z", ""); // i am severely depressed and suicidal
+                    tempTime = filtered.get(1).replace("T", " ").replace("Z", "");
 
                     waypoints.add(new GPXWaypoint(tempLat, tempLon, tempEle, tempTime));
                 }
