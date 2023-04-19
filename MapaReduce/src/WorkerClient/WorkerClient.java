@@ -36,6 +36,8 @@ public class WorkerClient extends Thread {
 
 
 				requestSocket = new Socket(host, 4322);
+				out = new ObjectOutputStream(requestSocket.getOutputStream());
+				in = new ObjectInputStream(requestSocket.getInputStream());
 				//TODO: calculate from chunk
 				//TODO: send calculated data from chunk
 				GPXStatistics stat = new GPXStatistics(0.0, 0.0, 0.0, 0);
