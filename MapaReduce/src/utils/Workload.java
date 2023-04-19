@@ -4,7 +4,7 @@ public class Workload {
     private boolean given = false;
     private ArrayList<GPXWaypoint> content= new ArrayList<GPXWaypoint>(); 
     
-    public void setContent(ArrayList<GPXWapoint> c) {
+    public void setContent(ArrayList<GPXWaypoint> c) {
         content= c;        
     }
     
