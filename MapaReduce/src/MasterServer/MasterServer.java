@@ -23,14 +23,15 @@ public class MasterServer {
 				/* Accept the connection */
 				userProviderSocket = socketForUsers.accept();
 				System.out.println(userProviderSocket.getRemoteSocketAddress().toString() + "sent:");
-				Thread userThread = new UserRequestHandler(userProviderSocket);
-				userThread.start();
 
-
+				//break into waypoint list
 				workerProviderSocket = socketForWorkers.accept();
 				System.out.println(workerProviderSocket.getRemoteSocketAddress().toString() + "sent:");
 				Thread workerThread = new WorkerRequestHandler(workerProviderSocket);
 				workerThread.start();
+
+				Thread userThread = new UserRequestHandler(userProviderSocket);
+				userThread.start();
 			}
 
 		} catch (IOException ioException) {
