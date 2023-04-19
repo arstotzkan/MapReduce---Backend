@@ -38,6 +38,7 @@ public class MasterServer {
 		} finally {
 			try {
 				userProviderSocket.close();
+				workerProviderSocket.close();
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
 			}
