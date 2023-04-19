@@ -47,7 +47,7 @@ public class UserRequestHandler extends Thread {
 		}
 	}
 
-	public ArrayList<GPXWaypoint> breakToWaypoints(GPXFile file, int waypointsPerGroup){
+	public ArrayList<GPXWaypoint> breakToWaypoints(GPXFile file){
 		//here we split file into groups of waypoints for workers)
 
 		//get content between <wpt></wpt>
@@ -56,7 +56,7 @@ public class UserRequestHandler extends Thread {
 		//get content between <time></time>
 		//TODO in next couple of days
 		String stringData = new String(file.getContent(), StandardCharsets.UTF_8);
-
-		return new ArrayList<GPXWaypoint>();
+		GPXParser parser = new GPXParser();
+		return parser.parseGPX(stringData);
 	}
 }
