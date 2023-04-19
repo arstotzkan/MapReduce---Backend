@@ -22,11 +22,11 @@ public class MasterServer {
 
 				/* Accept the connection */
 				userProviderSocket = socketForUsers.accept();
-				System.out.println(userProviderSocket.getRemoteSocketAddress().toString() + "sent:");
+				System.out.println("User " + userProviderSocket.getRemoteSocketAddress().toString() + "sent:");
 
 				//break into waypoint list
 				workerProviderSocket = socketForWorkers.accept();
-				System.out.println(workerProviderSocket.getRemoteSocketAddress().toString() + "sent:");
+				System.out.println("Worker " + workerProviderSocket.getRemoteSocketAddress().toString() + "sent:");
 				Thread workerThread = new WorkerRequestHandler(workerProviderSocket);
 				workerThread.start();
 
