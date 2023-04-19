@@ -1,9 +1,13 @@
 package MasterServer;
 
+import utils.GPXStatistics;
+import utils.GPXWaypoint;
 import utils.Workload;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+
 public class WorkerRequestHandler extends Thread {
 	ObjectInputStream in;
 	ObjectOutputStream out;
@@ -33,7 +37,7 @@ public class WorkerRequestHandler extends Thread {
 					//reduce phase propably goes here
 					GPXStatistics t = (GPXStatistics) request;
 					//somehow return this into main program
-					Workload res = new Workload()
+					Workload res = new Workload();
 					out.writeObject(res);
 					out.flush();
 				}
