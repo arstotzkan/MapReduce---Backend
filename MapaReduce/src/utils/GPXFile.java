@@ -28,4 +28,8 @@ public class GPXFile implements Serializable {
     public byte[] getContent() {
         return content;
     }
+
+    public String getContentAsString(){
+        return new String(this.getContent(), StandardCharsets.UTF_8);
+    }
 }
