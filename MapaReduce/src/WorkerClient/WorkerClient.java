@@ -19,23 +19,30 @@ public class WorkerClient extends Thread {
 		try {
 			while (true) {
 				String host = "localhost";
-				/* Create socket for contacting the server on port 4321*/
+				/* Create socket for contacting the server on port 4322*/
 				requestSocket = new Socket(host, 4322);
 
 				/* Create the streams to send and receive data from server */
 				out = new ObjectOutputStream(requestSocket.getOutputStream());
 				in = new ObjectInputStream(requestSocket.getInputStream());
 				/* Write the two integers */
-				Workload t = new Workload();
-				out.writeObject(t);
+				Workload workload = new Workload();
+				out.writeObject(workload);
 				out.flush();
 				/* Print the received result from server */
-				Workload t2 = (Workload) in.readObject();
-				System.out.println("Server>" + t2.isGiven());
+				workload = (Workload) in.readObject();
+				System.out.println("Server>" + workload.isGiven());
 
+
+				requestSocket = new Socket(host, 4322);
 				//TODO: calculate from chunk
 				//TODO: send calculated data from chunk
-				//TODO: receive clear
+				GPXStatistics stat = new GPXStatistics(0.0, 0.0, 0.0, 0);
+				out.writeObject(t);
+				out.flush();
+
+				Workload finalResponse = (Workload) in.readObject();
+
 			}
 		} catch (UnknownHostException unknownHost) {
 			System.err.println("You are trying to connect to an unknown host!");
