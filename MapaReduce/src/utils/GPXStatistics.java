@@ -46,4 +46,9 @@ public class GPXStatistics implements Serializable {
     public void setTotalExerciseTime(int totalExerciseTime) {
         this.totalExerciseTime = totalExerciseTime;
     }
+
+    @Override
+    public String toString(){
+        return ("Total Distance : " + this.totalDistance + ", Average Speed : " + this.averageSpeed + ", Total Elevation : " + this.totalElevation + ", Total Excercise Time : " + this.totalExerciseTime);
+    }
 }
