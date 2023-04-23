@@ -65,7 +65,21 @@ public class WorkerRequestHandler extends Thread {
 		this.chunks = chunks;
 	}
 
-	public GPXStatistics reduce(GPXStatistics[] chunks){
-		return new GPXStatistics(100.0, 100.0, 0.0, 10);
+	public GPXStatistics reduce(ArrayList<GPXStatistics> chunks){
+		double totDist = 0.0;
+		double avgSpd = 0.0;
+		double totEle = 0.0;
+		int totExTime = 0;
+
+		for (GPXStatistics currStat : chunks) {
+			totDist += currStat.getTotalDistance();
+			totEle += currStat.getTotalElevation();
+			totExTime += currStat.getTotalExerciseTime();
+			avgSpd += currStat.getAverageSpeed();
+		}
+
+		avgSpd = avgSpd / chunks.size(); //maybe this needs some work, cba doing maths while hangover
+
+		return new GPXStatistics(totDist, avgSpd, totEle, totExTime);
 	}
 }
