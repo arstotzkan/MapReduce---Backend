@@ -31,20 +31,37 @@ public class GPXParser {
     }
 
     /**
+     * Parses the beginning of a .gpx file and returns the user
+     *
+     * @param gpx gpx a string containing raw data of a .gpx file
+     * @return the user's name as a string
+     */
+    public static String getUser(String gpx) throws ParserConfigurationException, IOException, SAXException {
+        Document doc = readGPX(gpx);
+        NodeList nodeList = doc.getElementsByTagName("*");
+        String user = null;
+        for (int i = 0; i < nodeList.getLength(); i++){
+            Node currNode = nodeList.item(i);
+            if (currNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) currNode;
+                if (currNode.getNodeName().equals("gpx")) {
+                    user = element.getAttribute("creator");
+                }
+            }
+        }
+        return user;
+    }
+
+    /**
      * Parses a .gpx file and returns a list of GPXWaypoints
      *
      * @param gpx a string containing raw data of a .gpx file
      * @return ArrayList of GPXWaypoints
-     * @throws ParserConfigurationException
-     * @throws IOException
-     * @throws SAXException
-     * @throws ParseException
      */
     public static ArrayList<GPXWaypoint> parseGPX(String gpx) throws ParserConfigurationException, IOException, SAXException, ParseException {
         Document doc = readGPX(gpx);
         NodeList nodeList = doc.getElementsByTagName("*");
         ArrayList<GPXWaypoint> waypoints = new ArrayList<>();
-        String user = null; //not sure where we'll be using this but once we have DAOs its useful
 
         for (int i = 0; i < nodeList.getLength(); i++) {
 
@@ -59,8 +76,9 @@ public class GPXParser {
                 Element element = (Element) currNode;
 
                 if (currNode.getNodeName().equals("gpx")) {
-                    user = element.getAttribute("creator");
-                } else if (currNode.getNodeName().equals("wpt")) {
+                    continue;
+                }
+                else if (currNode.getNodeName().equals("wpt")) {
                     tempLat = element.getAttribute("lat");
                     tempLon = element.getAttribute("lon");
 
