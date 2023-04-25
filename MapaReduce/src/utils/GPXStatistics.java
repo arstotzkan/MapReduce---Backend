@@ -34,7 +34,22 @@ public class GPXStatistics implements Serializable {
         return totalElevation;
     }
 
-    public int getTotalExerciseTime() {
+    public String getTotalExerciseTime() {
+        String hours = String.valueOf(totalExerciseTime / 3600);
+        String minutes = String.valueOf((totalExerciseTime % 3600) / 60);
+        String seconds = String.valueOf(totalExerciseTime % 60);
+
+        if (Integer.parseInt(hours) < 10)
+            hours = "0" + hours;
+        if (Integer.parseInt(minutes) < 10)
+            minutes = "0" + minutes;
+        if (Integer.parseInt(seconds) < 10)
+            seconds = "0" + seconds;
+
+        return String.valueOf(hours) + ":" + String.valueOf(minutes) + ":" + String.valueOf(seconds) ;
+    }
+
+    public int getTotalExerciseTimeInSeconds() {
         return totalExerciseTime;
     }
 
@@ -59,6 +74,6 @@ public class GPXStatistics implements Serializable {
 
     @Override
     public String toString(){
-        return ("{ User : " + this.user + ", Total Distance : " + this.totalDistance + ", Average Speed : " + this.averageSpeed + ", Total Elevation : " + this.totalElevation + ", Total Exercise Time : " + this.totalExerciseTime + " }");
+        return ("{ User : " + this.user + ", Total Distance : " + (double) Math.round(this.totalDistance) / 1000 + " (km), Average Speed : " + Math.round(this.averageSpeed * 10) / 10 + " (m/s), Total Elevation : " + (int) this.totalElevation + " (m), Total Exercise Time : " + this.getTotalExerciseTime() + " (hh:mm:ss) }");
     }
 }

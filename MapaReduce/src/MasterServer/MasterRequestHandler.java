@@ -144,11 +144,11 @@ public class MasterRequestHandler extends Thread {
 		for (GPXStatistics currStat : chunks) {
 			totDist += currStat.getTotalDistance();
 			totEle += currStat.getTotalElevation();
-			totExTime += currStat.getTotalExerciseTime();
+			totExTime += currStat.getTotalExerciseTimeInSeconds();
 			avgSpd += currStat.getAverageSpeed();
 		}
 
-		avgSpd = avgSpd / chunks.size(); //maybe this needs some work, cba doing maths while hangover
+		avgSpd = avgSpd / chunks.size(); //maybe this needs some work, cba doing maths while hangover (maybe needs some weights)
 
 		return new GPXStatistics(username, totDist, avgSpd, totEle, totExTime);
 	}
