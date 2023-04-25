@@ -91,6 +91,21 @@ public class MasterRequestHandler extends Thread {
 
 	}
 
+	public static ArrayList<ArrayList<GPXWaypoint>> breakToSublists(ArrayList<GPXWaypoint> list, int n){
+
+		ArrayList<ArrayList<GPXWaypoint>> finalList= new ArrayList<ArrayList<GPXWaypoint>>();
+		//The number of sublists that will be created eg. if there's 10 elements in list and n=3, we will get ceil(10/3) = 4.
+		int sublist_num= (int) Math.ceil(list.size() / n);
+		//
+		for (int i = 0; i <= sublist_num; i++) {
+			int startIndex = i * n;
+			int endIndex = Math.min(startIndex + n, list.size());
+			ArrayList<GPXWaypoint> sublist = new ArrayList<>(list.subList(startIndex, endIndex));
+			finalList.add(sublist);
+		}
+
+		return finalList;
+
 	public GPXStatistics reduce(ArrayList<GPXStatistics> chunks){
 		String username = chunks.get(0).getUser();
 		double totDist = 0.0;
