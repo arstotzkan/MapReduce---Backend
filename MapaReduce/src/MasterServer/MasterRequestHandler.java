@@ -37,12 +37,15 @@ public class MasterRequestHandler extends Thread {
 			System.out.println("User " + this.sender + " sent: " + file.getFilename());
 			ArrayList<GPXWaypoint> waypointList = this.breakToWaypoints(file);
 
-			RequestToWorker[] workerThreads = new RequestToWorker[1];
+			ArrayList<ArrayList<GPXWaypoint>> listOfChunks = new ArrayList<ArrayList<GPXWaypoint>>();
+			listOfChunks.add(waypointList);
+
+			RequestToWorker[] workerThreads = new RequestToWorker[listOfChunks.size()];
 
 			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>();
 
 			for (int i = 0; i < workerThreads.length; i++){
-				workerThreads[i] = new RequestToWorker(6000, waypointList);
+				workerThreads[i] = new RequestToWorker(6000 + (i % 1) , waypointList);
 				workerThreads[i].start();
 			}
 
