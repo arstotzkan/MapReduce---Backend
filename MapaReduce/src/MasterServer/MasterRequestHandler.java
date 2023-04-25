@@ -1,7 +1,6 @@
 package MasterServer;
 
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,13 +14,13 @@ import utils.GPXParser;
 import utils.GPXStatistics;
 import utils.GPXWaypoint;
 
-public class UserRequestHandler extends Thread {
+public class MasterRequestHandler extends Thread {
 	ObjectInputStream in;
 	ObjectOutputStream out;
 	String sender;
 
 
-	public UserRequestHandler(Socket connection , ServerSocket workerServerSocket) {
+	public MasterRequestHandler(Socket connection , ServerSocket workerServerSocket) {
 		try {
 			out = new ObjectOutputStream(connection.getOutputStream());
 			in = new ObjectInputStream(connection.getInputStream());

@@ -9,11 +9,11 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class MasterRequestHandler extends Thread {
+public class WorkerRequestHandler extends Thread {
     ObjectInputStream in;
     ObjectOutputStream out;
 
-    public MasterRequestHandler(Socket connection) {
+    public WorkerRequestHandler(Socket connection) {
         try {
             out = new ObjectOutputStream(connection.getOutputStream());
             in = new ObjectInputStream(connection.getInputStream());

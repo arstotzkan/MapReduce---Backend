@@ -24,7 +24,7 @@ public class MasterServer extends Thread{
 				//TODO: find way to respond to worker when user has sent file
 				/* Accept the connection */
 				userProviderSocket = socketForUsers.accept();
-				Thread userThread = new UserRequestHandler(userProviderSocket, socketForWorkers);
+				Thread userThread = new MasterRequestHandler(userProviderSocket, socketForWorkers);
 				userThread.start();
 			}
 
