@@ -26,6 +26,10 @@ public class WorkerRequestHandler extends Thread {
 
     public void run() {
         try {
+            /*
+            simple method that takes a ArrayList<GPXWaypoint>
+            calculates statistics and then returns a GPXStatistics object
+            */
             Object request = (Object) in.readObject();
             ArrayList<GPXWaypoint> chunk = (ArrayList<GPXWaypoint>) request;
             GPXStatistics stats = calculateStatistics(chunk);

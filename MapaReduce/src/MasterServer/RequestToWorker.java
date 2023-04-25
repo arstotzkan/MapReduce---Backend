@@ -29,7 +29,7 @@ public class RequestToWorker extends Thread{
         String host = "localhost";
         try {
 
-            /* Create socket for contacting the server on port 4321*/
+            /* Create socket for contacting the server on port*/
             this.connection = new Socket(host,this.port);
 
             /* Create the streams to send and receive data from server */

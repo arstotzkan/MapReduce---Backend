@@ -36,12 +36,12 @@ public class MasterRequestHandler extends Thread {
 
 	public void run() {
 		try {
-			GPXFile file = (GPXFile) in.readObject();
+			GPXFile file = (GPXFile) in.readObject(); //reading GPXFile object
 			System.out.println("User " + this.sender + " sent: " + file.getFilename());
-			ArrayList<ArrayList<GPXWaypoint>> listOfChunks = breakFileForWorkers(file);
 
-			RequestToWorker[] workerThreads = new RequestToWorker[listOfChunks.size()];
-			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>();
+			ArrayList<ArrayList<GPXWaypoint>> listOfChunks = breakFileForWorkers(file); //make a 2d list of breakpoints
+			RequestToWorker[] workerThreads = new RequestToWorker[listOfChunks.size()]; //array of threads
+			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>(); //this is where we store final stats
 
 			for (int i = 0; i < workerThreads.length; i++){
 				int workerPort = 6001 + (i % this.numberOfWorkers);
@@ -54,11 +54,11 @@ public class MasterRequestHandler extends Thread {
 			for (int i = 0; i < workerThreads.length; i++) {
 				//waiting for all threads to join
 				workerThreads[i].join();
-				finalStats.add(workerThreads[i].getResult());
+				finalStats.add(workerThreads[i].getResult()); //adding to final results
 			}
 
 			//reduce
-			GPXStatistics stats = reduce(finalStats);
+			GPXStatistics stats = reduce(finalStats); //send final stats to user
 			System.out.println("User " + this.sender + " got: " + stats.toString());
 			out.writeObject(stats);
 			out.flush();
