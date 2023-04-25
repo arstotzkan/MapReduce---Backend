@@ -6,6 +6,7 @@ import utils.GPXWaypoint;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -27,31 +28,7 @@ public class WorkerRequestHandler extends Thread {
         try {
             Object request = (Object) in.readObject();
             ArrayList<GPXWaypoint> chunk = (ArrayList<GPXWaypoint>) request;
-            /*Statistics calculation*/
-            double totalDistance = 0.0;
-            int totalExerciseTime= 0;
-            GPXWaypoint previousWaypoint = null;
-            for (GPXWaypoint currentWaypoint: chunk){
-                if (previousWaypoint != null) {
-                    double distance = calculateDist(previousWaypoint, currentWaypoint);
-                    totalDistance += distance;
-                    long timeDiff = currentWaypoint.getDatetime().getTime()- previousWaypoint.getDatetime().getTime();
-                    double elDiff = currentWaypoint.getElevation() - previousWaypoint.getElevation();
-                    if (elDiff > 0) {
-                        gain += elDiff;
-                    } else if (elDiff < 0) {
-                        loss += Math.abs(elDiff);
-                    }
-                    totalExerciseTime += (int) (timeDiff/1000);
-                }
-                previousWaypoint = currentWaypoint;
-            }
-            double totalElevation = gain - loss;
-            double averageSpeed = totalDistance / totalExerciseTime;
-        }
-
-            GPXStatistics stat = new GPXStatistics(totalDistance, averageSpeed, totalElevation, totalExerciseTime);
-
+            GPXStatistics stats = calculateStatistics(chunk);
             out.writeObject(stats);
             out.flush();
         } catch (IOException e) {
@@ -85,6 +62,35 @@ public class WorkerRequestHandler extends Thread {
 
         double c = 2 * Math.asin(Math.sqrt(a));
         return Math.abs((c * r));
+    }
+
+    private GPXStatistics calculateStatistics(ArrayList<GPXWaypoint> chunk){
+        /*Statistics Calculation*/
+        double totalDistance = 0.0;
+        int totalExerciseTime= 0;
+        double gain = 0.0;
+        double loss = 0.0;
+
+        GPXWaypoint previousWaypoint = null;
+        for (GPXWaypoint currentWaypoint: chunk){
+            if (previousWaypoint != null) {
+                double distance = calculateDist(previousWaypoint, currentWaypoint);
+                totalDistance += distance;
+                long timeDiff = currentWaypoint.getDatetime().getTime()- previousWaypoint.getDatetime().getTime();
+                double elDiff = currentWaypoint.getElevation() - previousWaypoint.getElevation();
+                if (elDiff > 0) {
+                    gain += elDiff;
+                } else if (elDiff < 0) {
+                    loss += Math.abs(elDiff);
+                }
+                totalExerciseTime += (int) (timeDiff/1000);
+            }
+            previousWaypoint = currentWaypoint;
+        }
+        double totalElevation = gain - loss;
+        double averageSpeed = totalDistance / totalExerciseTime;
+
+        return new GPXStatistics(totalDistance, averageSpeed, totalElevation, totalExerciseTime);
     }
 
 }
