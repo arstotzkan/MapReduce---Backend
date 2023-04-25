@@ -3,7 +3,7 @@ import Worker.Worker;
 
 public class ServerMain {
     public static void main(String args[]) {
-        int numberOfWorkers = Integer.parseInt(args[0]);
+        int numberOfWorkers = Integer.parseInt(args[0]); //taking number of workers from args
         new MasterServer(numberOfWorkers).start();
         for (int i = 0; i < numberOfWorkers; i++){
             new Worker(6001 + i).start(); //init
