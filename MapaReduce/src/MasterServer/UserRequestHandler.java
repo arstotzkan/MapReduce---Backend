@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -17,11 +18,14 @@ import utils.GPXWaypoint;
 public class UserRequestHandler extends Thread {
 	ObjectInputStream in;
 	ObjectOutputStream out;
+	String sender;
 
-	public UserRequestHandler(Socket connection) {
+
+	public UserRequestHandler(Socket connection , ServerSocket workerServerSocket) {
 		try {
 			out = new ObjectOutputStream(connection.getOutputStream());
 			in = new ObjectInputStream(connection.getInputStream());
+			sender =  connection.getRemoteSocketAddress().toString();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -31,13 +35,33 @@ public class UserRequestHandler extends Thread {
 	public void run() {
 		try {
 			GPXFile file = (GPXFile) in.readObject();
-			System.out.println(this.breakToWaypoints(file));
-			GPXStatistics stats = new GPXStatistics(100.0, 10.0, 0.0, 300);
+			System.out.println("User " + this.sender + " sent: " + file.getFilename());
+			ArrayList<GPXWaypoint> waypointList = this.breakToWaypoints(file);
+
+			RequestToWorker[] workerThreads = new RequestToWorker[3];
+
+			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>();
+
+			for (int i = 0; i < workerThreads.length; i++){
+				workerThreads[i] = new RequestToWorker(6000, waypointList);
+				workerThreads[i].start();
+			}
+
+			for (int i = 0; i < workerThreads.length; i++) {
+				workerThreads[i].join();
+				finalStats.add(workerThreads[i].getResult());
+			}
+
+			//reduce
+			GPXStatistics stats = reduce(finalStats);
+			System.out.println("User " + this.sender + " got: " + stats.toString());
 			out.writeObject(stats);
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		} finally {
 			try {
@@ -68,4 +92,23 @@ public class UserRequestHandler extends Thread {
 		}
 
 	}
+
+	public GPXStatistics reduce(ArrayList<GPXStatistics> chunks){
+		double totDist = 0.0;
+		double avgSpd = 0.0;
+		double totEle = 0.0;
+		int totExTime = 0;
+
+		for (GPXStatistics currStat : chunks) {
+			totDist += currStat.getTotalDistance();
+			totEle += currStat.getTotalElevation();
+			totExTime += currStat.getTotalExerciseTime();
+			avgSpd += currStat.getAverageSpeed();
+		}
+
+		avgSpd = avgSpd / chunks.size(); //maybe this needs some work, cba doing maths while hangover
+
+		return new GPXStatistics(totDist, avgSpd, totEle, totExTime);
+	}
+
 }
