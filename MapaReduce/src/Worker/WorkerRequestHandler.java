@@ -70,6 +70,7 @@ public class WorkerRequestHandler extends Thread {
         int totalExerciseTime= 0;
         double gain = 0.0;
         double loss = 0.0;
+        String username = chunk.get(0).getUser();
 
         GPXWaypoint previousWaypoint = null;
         for (GPXWaypoint currentWaypoint: chunk){
@@ -90,7 +91,7 @@ public class WorkerRequestHandler extends Thread {
         double totalElevation = gain - loss;
         double averageSpeed = totalDistance / totalExerciseTime;
 
-        return new GPXStatistics(totalDistance, averageSpeed, totalElevation, totalExerciseTime);
+        return new GPXStatistics(username, totalDistance, averageSpeed, totalElevation, totalExerciseTime);
     }
 
 }

@@ -37,7 +37,7 @@ public class MasterRequestHandler extends Thread {
 			System.out.println("User " + this.sender + " sent: " + file.getFilename());
 			ArrayList<GPXWaypoint> waypointList = this.breakToWaypoints(file);
 
-			RequestToWorker[] workerThreads = new RequestToWorker[3];
+			RequestToWorker[] workerThreads = new RequestToWorker[1];
 
 			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>();
 
@@ -92,6 +92,7 @@ public class MasterRequestHandler extends Thread {
 	}
 
 	public GPXStatistics reduce(ArrayList<GPXStatistics> chunks){
+		String username = chunks.get(0).getUser();
 		double totDist = 0.0;
 		double avgSpd = 0.0;
 		double totEle = 0.0;
@@ -106,7 +107,7 @@ public class MasterRequestHandler extends Thread {
 
 		avgSpd = avgSpd / chunks.size(); //maybe this needs some work, cba doing maths while hangover
 
-		return new GPXStatistics(totDist, avgSpd, totEle, totExTime);
+		return new GPXStatistics(username, totDist, avgSpd, totEle, totExTime);
 	}
 
 }

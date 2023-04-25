@@ -23,6 +23,7 @@ import org.xml.sax.*;
  */
 public class GPXParser {
 
+
     private static Document readGPX(String gpx) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -63,6 +64,8 @@ public class GPXParser {
         NodeList nodeList = doc.getElementsByTagName("*");
         ArrayList<GPXWaypoint> waypoints = new ArrayList<>();
 
+        String username = getUser(gpx);
+
         for (int i = 0; i < nodeList.getLength(); i++) {
 
             String tempLat;
@@ -88,7 +91,7 @@ public class GPXParser {
                     tempEle = filtered.get(0);
                     tempTime = filtered.get(1).replace("T", " ").replace("Z", "");
 
-                    waypoints.add(new GPXWaypoint(tempLat, tempLon, tempEle, tempTime));
+                    waypoints.add(new GPXWaypoint( username,tempLat, tempLon, tempEle, tempTime));
                 }
             }
         }

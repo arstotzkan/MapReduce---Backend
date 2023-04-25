@@ -7,24 +7,32 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 public class GPXWaypoint implements Serializable {
+
+    private String user;
     private double latitude;
     private double longitude;
     private double elevation;
     private Date datetime;
 
-    public GPXWaypoint(double latitude, double longitude, double elevation, Date datetime) {
+    public GPXWaypoint(String username, double latitude, double longitude, double elevation, Date datetime) {
+        this.user =  username;
         this.latitude = latitude;
         this.longitude = longitude;
         this.elevation = elevation;
         this.datetime = datetime;
     }
 
-    public GPXWaypoint(String latitude, String longitude, String elevation, String datetime) throws ParseException {
+    public GPXWaypoint(String username, String latitude, String longitude, String elevation, String datetime) throws ParseException {
+        this.user =  username;
         this.latitude = Double.parseDouble(latitude);
         this.longitude = Double.parseDouble(longitude);
         this.elevation = Double.parseDouble(elevation);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         this.datetime = formatter.parse(datetime);
+    }
+
+    public String getUser() {
+        return user;
     }
 
     public double getLatitude() {
@@ -47,6 +55,6 @@ public class GPXWaypoint implements Serializable {
     public String toString() {
         String pattern = "yyyy-MM-dd HH:mm:ss";
         DateFormat df = new SimpleDateFormat(pattern);
-        return ( "Latitude: " + this.latitude + ", Longitude: " + this.longitude + ", Elevation: " + this.elevation + ", DateTime: " + df.format(this.datetime));
+        return ( "{ User: " + this.user + ", Latitude: " + this.latitude + ", Longitude: " + this.longitude + ", Elevation: " + this.elevation + ", DateTime: " + df.format(this.datetime) + " }");
     }
 }

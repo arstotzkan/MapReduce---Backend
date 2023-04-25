@@ -3,16 +3,23 @@ package utils;
 import java.io.Serializable;
 
 public class GPXStatistics implements Serializable {
+
+    private String user;
     private double totalDistance;
     private double averageSpeed;
     private double totalElevation;
     private int totalExerciseTime;
 
-    public GPXStatistics(double totalDistance, double averageSpeed, double totalElevation, int totalExerciseTime) {
+    public GPXStatistics(String username, double totalDistance, double averageSpeed, double totalElevation, int totalExerciseTime) {
+        this.user = username;
         this.totalDistance = totalDistance;
         this.averageSpeed = averageSpeed;
         this.totalElevation = totalElevation;
         this.totalExerciseTime = totalExerciseTime;
+    }
+
+    public String getUser() {
+        return user;
     }
 
     public double getTotalDistance() {
@@ -31,6 +38,9 @@ public class GPXStatistics implements Serializable {
         return totalExerciseTime;
     }
 
+    public void setUser(String user) {
+        this.user = user;
+    }
     public void setTotalDistance(double totalDistance) {
         this.totalDistance = totalDistance;
     }
@@ -49,6 +59,6 @@ public class GPXStatistics implements Serializable {
 
     @Override
     public String toString(){
-        return ("Total Distance : " + this.totalDistance + ", Average Speed : " + this.averageSpeed + ", Total Elevation : " + this.totalElevation + ", Total Excercise Time : " + this.totalExerciseTime);
+        return ("{ User : " + this.user + ", Total Distance : " + this.totalDistance + ", Average Speed : " + this.averageSpeed + ", Total Elevation : " + this.totalElevation + ", Total Exercise Time : " + this.totalExerciseTime + " }");
     }
 }
