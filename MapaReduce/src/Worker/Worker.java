@@ -1,7 +1,5 @@
 package Worker;
 
-import MasterServer.UserRequestHandler;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -31,7 +29,7 @@ public class Worker extends Thread {
 
             while (true) {
                 this.connection = this.server.accept();
-                MasterRequestHandler masterThread = new MasterRequestHandler(this.connection);
+                WorkerRequestHandler masterThread = new WorkerRequestHandler(this.connection);
                 masterThread.start();
             }
 
