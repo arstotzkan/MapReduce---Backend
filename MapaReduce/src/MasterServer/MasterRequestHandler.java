@@ -35,17 +35,13 @@ public class MasterRequestHandler extends Thread {
 		try {
 			GPXFile file = (GPXFile) in.readObject();
 			System.out.println("User " + this.sender + " sent: " + file.getFilename());
-			ArrayList<GPXWaypoint> waypointList = this.breakToWaypoints(file);
-
-			ArrayList<ArrayList<GPXWaypoint>> listOfChunks = new ArrayList<ArrayList<GPXWaypoint>>();
-			listOfChunks.add(waypointList);
+			ArrayList<ArrayList<GPXWaypoint>> listOfChunks = breakFileForWorkers(file);
 
 			RequestToWorker[] workerThreads = new RequestToWorker[listOfChunks.size()];
-
 			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>();
 
 			for (int i = 0; i < workerThreads.length; i++){
-				workerThreads[i] = new RequestToWorker(6000 + (i % 1) , waypointList);
+				workerThreads[i] = new RequestToWorker(6000 + (i % 1) , listOfChunks.get(i));
 				workerThreads[i].start();
 			}
 
@@ -75,7 +71,11 @@ public class MasterRequestHandler extends Thread {
 		}
 	}
 
-	public ArrayList<GPXWaypoint> breakToWaypoints(GPXFile file){
+	public ArrayList<ArrayList<GPXWaypoint>> breakFileForWorkers(GPXFile file){
+		ArrayList<GPXWaypoint> waypointList = this.breakToWaypoints(file);
+		return breakToSublists(waypointList, 3);
+	}
+	private ArrayList<GPXWaypoint> breakToWaypoints(GPXFile file){
 		//here we split file into groups of waypoints for workers)
 
 		//get content between <wpt></wpt>
@@ -94,20 +94,45 @@ public class MasterRequestHandler extends Thread {
 
 	}
 
-	public static ArrayList<ArrayList<GPXWaypoint>> breakToSublists(ArrayList<GPXWaypoint> list, int n){
+//	private ArrayList<ArrayList<GPXWaypoint>> breakToSublists(ArrayList<GPXWaypoint> list, int n){
+//
+//		ArrayList<ArrayList<GPXWaypoint>> finalList= new ArrayList<ArrayList<GPXWaypoint>>();
+//		//The number of sublists that will be created eg. if there's 10 elements in list and n=3, we will get ceil(10/3) = 4.
+//		int sublist_num= (int) Math.ceil(list.size() / n);
+//		//
+//		for (int i = 0; i <= sublist_num; i++) {
+//			int startIndex = i * n - i;
+//			int endIndex = Math.min(startIndex + n, list.size());
+//			ArrayList<GPXWaypoint> sublist = new ArrayList<>(list.subList(startIndex, endIndex));
+//			finalList.add(sublist);
+//		}
+//
+//		return finalList;
+//	}
 
-		ArrayList<ArrayList<GPXWaypoint>> finalList= new ArrayList<ArrayList<GPXWaypoint>>();
-		//The number of sublists that will be created eg. if there's 10 elements in list and n=3, we will get ceil(10/3) = 4.
-		int sublist_num= (int) Math.ceil(list.size() / n);
-		//
-		for (int i = 0; i <= sublist_num; i++) {
-			int startIndex = i * n;
-			int endIndex = Math.min(startIndex + n, list.size());
-			ArrayList<GPXWaypoint> sublist = new ArrayList<>(list.subList(startIndex, endIndex));
-			finalList.add(sublist);
+	public ArrayList<ArrayList<GPXWaypoint>> breakToSublists(ArrayList<GPXWaypoint> list, int n){
+
+		ArrayList<ArrayList<GPXWaypoint>> finalList = new ArrayList<ArrayList<GPXWaypoint>>();
+		ArrayList<GPXWaypoint> temp = new ArrayList<GPXWaypoint>();
+		finalList.add(temp);
+
+		int divider = 3;
+		int i = 0;
+
+		for (GPXWaypoint wp : list){
+			temp.add(wp);
+
+			if (i % n == n - 1){
+				temp = new ArrayList<GPXWaypoint>();
+				temp.add(wp);
+				finalList.add(temp);
+				i = 0;
+			}
+			i++;
 		}
-
+		System.out.println("Broke list to " + finalList.size() + " sublists: " + finalList );
 		return finalList;
+	}
 
 	public GPXStatistics reduce(ArrayList<GPXStatistics> chunks){
 		String username = chunks.get(0).getUser();
