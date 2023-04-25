@@ -2,7 +2,7 @@ package MasterServer;
 import java.io.*;
 import java.net.*;
 
-public class MasterServer {
+public class MasterServer extends Thread{
 
 	/* Define the socket that receives requests */
 	ServerSocket socketForUsers;
@@ -10,27 +10,21 @@ public class MasterServer {
 	/* Define the socket that is used to handle the connection */
 	Socket userProviderSocket;
 	Socket workerProviderSocket;
+	public void run(){
+		this.openServer();
+	}
 	public void openServer() {
 		try {
 
 			/* Create Server Socket */
-			socketForUsers = new ServerSocket(4321, 10); //socket for users
-			socketForWorkers = new ServerSocket(4322, 10); //socket for workers
+			socketForUsers = new ServerSocket(4321, 100); //socket for users
+			System.out.println("Server ready...");
 
 			while (true) {
 				//TODO: find way to respond to worker when user has sent file
-
 				/* Accept the connection */
 				userProviderSocket = socketForUsers.accept();
-				System.out.println("User " + userProviderSocket.getRemoteSocketAddress().toString() + "sent:");
-
-				//break into waypoint list
-				workerProviderSocket = socketForWorkers.accept();
-				System.out.println("Worker " + workerProviderSocket.getRemoteSocketAddress().toString() + "sent:");
-				Thread workerThread = new WorkerRequestHandler(workerProviderSocket);
-				workerThread.start();
-
-				Thread userThread = new UserRequestHandler(userProviderSocket);
+				Thread userThread = new UserRequestHandler(userProviderSocket, socketForWorkers);
 				userThread.start();
 			}
 
