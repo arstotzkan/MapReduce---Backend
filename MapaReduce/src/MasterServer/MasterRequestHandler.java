@@ -19,13 +19,15 @@ public class MasterRequestHandler extends Thread {
 	ObjectOutputStream out;
 	String sender;
 
+	int numberOfWorkers;
 
-	public MasterRequestHandler(Socket connection , ServerSocket workerServerSocket) {
+	public MasterRequestHandler(Socket connection , int numberOfWorkers) {
 		try {
-			out = new ObjectOutputStream(connection.getOutputStream());
-			in = new ObjectInputStream(connection.getInputStream());
-			sender =  connection.getRemoteSocketAddress().toString();
+			this.out = new ObjectOutputStream(connection.getOutputStream());
+			this.in = new ObjectInputStream(connection.getInputStream());
+			this.sender =  connection.getRemoteSocketAddress().toString();
 
+			this.numberOfWorkers = numberOfWorkers;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -41,7 +43,9 @@ public class MasterRequestHandler extends Thread {
 			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>();
 
 			for (int i = 0; i < workerThreads.length; i++){
-				workerThreads[i] = new RequestToWorker(6000 + (i % 1) , listOfChunks.get(i));
+				int workerPort = 6000 + (i % this.numberOfWorkers);
+				System.out.println(workerPort);
+				workerThreads[i] = new RequestToWorker(workerPort , listOfChunks.get(i));
 				workerThreads[i].start();
 			}
 
