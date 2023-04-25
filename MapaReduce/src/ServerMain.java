@@ -7,7 +7,6 @@ public class ServerMain {
 
         int numberOfWorkers = Integer.parseInt(args[0]);
         for (int i = 0; i < numberOfWorkers; i++){
-            System.out.println();
             new Worker(6000 + i).start(); //init
         }
 

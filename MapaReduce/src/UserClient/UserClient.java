@@ -32,7 +32,7 @@ public class UserClient extends Thread {
 			out.flush();
 			/* Print the received result from server */
 			GPXStatistics stats = (GPXStatistics) in.readObject();
-			System.out.println("Server> " + stats.getTotalDistance());
+			System.out.println("Result: " + stats.toString() + "\n");
 
 		} catch (UnknownHostException unknownHost) {
 			System.err.println("You are trying to connect to an unknown host!");
