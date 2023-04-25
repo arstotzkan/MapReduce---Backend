@@ -19,6 +19,7 @@ public class MasterRequestHandler extends Thread {
 	ObjectOutputStream out;
 	String sender;
 
+	final int WAYPOINTS_PER_CHUNK = 5;
 	int numberOfWorkers;
 
 	public MasterRequestHandler(Socket connection , int numberOfWorkers) {
@@ -44,12 +45,14 @@ public class MasterRequestHandler extends Thread {
 
 			for (int i = 0; i < workerThreads.length; i++){
 				int workerPort = 6001 + (i % this.numberOfWorkers);
-				System.out.println(workerPort);
+				//implementing round robin here
+				//however data might be sent in a different order due to multithreading
 				workerThreads[i] = new RequestToWorker(workerPort , listOfChunks.get(i));
 				workerThreads[i].start();
 			}
 
 			for (int i = 0; i < workerThreads.length; i++) {
+				//waiting for all threads to join
 				workerThreads[i].join();
 				finalStats.add(workerThreads[i].getResult());
 			}
@@ -77,7 +80,7 @@ public class MasterRequestHandler extends Thread {
 
 	public ArrayList<ArrayList<GPXWaypoint>> breakFileForWorkers(GPXFile file){
 		ArrayList<GPXWaypoint> waypointList = this.breakToWaypoints(file);
-		return breakToSublists(waypointList, 3);
+		return breakToSublists(waypointList, WAYPOINTS_PER_CHUNK);
 	}
 	private ArrayList<GPXWaypoint> breakToWaypoints(GPXFile file){
 		//here we split file into groups of waypoints for workers)
@@ -97,22 +100,6 @@ public class MasterRequestHandler extends Thread {
 		}
 
 	}
-
-//	private ArrayList<ArrayList<GPXWaypoint>> breakToSublists(ArrayList<GPXWaypoint> list, int n){
-//
-//		ArrayList<ArrayList<GPXWaypoint>> finalList= new ArrayList<ArrayList<GPXWaypoint>>();
-//		//The number of sublists that will be created eg. if there's 10 elements in list and n=3, we will get ceil(10/3) = 4.
-//		int sublist_num= (int) Math.ceil(list.size() / n);
-//		//
-//		for (int i = 0; i <= sublist_num; i++) {
-//			int startIndex = i * n - i;
-//			int endIndex = Math.min(startIndex + n, list.size());
-//			ArrayList<GPXWaypoint> sublist = new ArrayList<>(list.subList(startIndex, endIndex));
-//			finalList.add(sublist);
-//		}
-//
-//		return finalList;
-//	}
 
 	public ArrayList<ArrayList<GPXWaypoint>> breakToSublists(ArrayList<GPXWaypoint> list, int n){
 
