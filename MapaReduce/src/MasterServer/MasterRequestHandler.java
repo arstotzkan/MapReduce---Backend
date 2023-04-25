@@ -79,7 +79,6 @@ public class MasterRequestHandler extends Thread {
 		//get lan/lon
 		//get content between <ele></ele>
 		//get content between <time></time>
-		//TODO in next couple of days
 		try{
 			String stringData = new String(file.getContent(), StandardCharsets.UTF_8);
 			GPXParser parser = new GPXParser();

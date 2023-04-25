@@ -24,7 +24,7 @@ public class Worker extends Thread {
         try {
 
             /* Create Server Socket */
-            this.server = new ServerSocket(this.port, 100); //socket for users
+            this.server = new ServerSocket(this.port, 100);
             System.out.println("Worker @ port " + this.port + " ready...");
 
             while (true) {

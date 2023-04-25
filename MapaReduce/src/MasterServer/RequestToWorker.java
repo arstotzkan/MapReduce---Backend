@@ -21,7 +21,6 @@ public class RequestToWorker extends Thread{
     public RequestToWorker(int port, ArrayList<GPXWaypoint> chunk) {
         this.port = port;
         this.chunk = chunk;
-        //this.connection = new Socket("localhost",port);
     }
 
     public void run(){
