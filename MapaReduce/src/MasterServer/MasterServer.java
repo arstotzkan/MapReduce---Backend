@@ -6,10 +6,14 @@ public class MasterServer extends Thread{
 
 	/* Define the socket that receives requests */
 	ServerSocket socketForUsers;
-	ServerSocket socketForWorkers;
 	/* Define the socket that is used to handle the connection */
 	Socket userProviderSocket;
-	Socket workerProviderSocket;
+	final int numberOfWorkers;
+
+	public MasterServer(int numberOfWorkers) {
+		this.numberOfWorkers = numberOfWorkers;
+	}
+
 	public void run(){
 		this.openServer();
 	}
@@ -23,7 +27,7 @@ public class MasterServer extends Thread{
 			while (true) {
 				/* Accept the connection */
 				userProviderSocket = socketForUsers.accept();
-				Thread userThread = new MasterRequestHandler(userProviderSocket, socketForWorkers);
+				Thread userThread = new MasterRequestHandler(userProviderSocket, numberOfWorkers);
 				userThread.start();
 			}
 
@@ -32,7 +36,6 @@ public class MasterServer extends Thread{
 		} finally {
 			try {
 				userProviderSocket.close();
-				workerProviderSocket.close();
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
 			}
