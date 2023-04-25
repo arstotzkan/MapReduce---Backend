@@ -43,7 +43,7 @@ public class MasterRequestHandler extends Thread {
 			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>();
 
 			for (int i = 0; i < workerThreads.length; i++){
-				int workerPort = 6000 + (i % this.numberOfWorkers);
+				int workerPort = 6001 + (i % this.numberOfWorkers);
 				System.out.println(workerPort);
 				workerThreads[i] = new RequestToWorker(workerPort , listOfChunks.get(i));
 				workerThreads[i].start();
