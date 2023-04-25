@@ -47,7 +47,7 @@ public class WorkerRequestHandler extends Thread {
 
     /*Calculates Haversine distance between 2 GPXWaypoints*/
     private static double calculateDist(GPXWaypoint w1, GPXWaypoint w2) {
-        double r = 6371; //Earth's radius in kms
+        double r = 6371 * 1000; //Earth's radius in meters
         double lon1 = Math.toRadians(w1.getLongitude());
         double lon2 = Math.toRadians(w2.getLongitude());
         double lat1 = Math.toRadians(w1.getLatitude());
