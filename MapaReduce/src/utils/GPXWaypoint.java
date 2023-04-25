@@ -1,11 +1,12 @@
 package utils;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-public class GPXWaypoint {
+public class GPXWaypoint implements Serializable {
     private double latitude;
     private double longitude;
     private double elevation;
