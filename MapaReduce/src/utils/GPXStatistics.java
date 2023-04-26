@@ -6,14 +6,12 @@ public class GPXStatistics implements Serializable {
 
     private String user;
     private double totalDistance;
-    private double averageSpeed;
     private double totalElevation;
     private int totalExerciseTime;
 
-    public GPXStatistics(String username, double totalDistance, double averageSpeed, double totalElevation, int totalExerciseTime) {
+    public GPXStatistics(String username, double totalDistance, double totalElevation, int totalExerciseTime) {
         this.user = username;
         this.totalDistance = totalDistance;
-        this.averageSpeed = averageSpeed;
         this.totalElevation = totalElevation;
         this.totalExerciseTime = totalExerciseTime;
     }
@@ -27,7 +25,7 @@ public class GPXStatistics implements Serializable {
     }
 
     public double getAverageSpeed() {
-        return averageSpeed;
+        return this.totalDistance/this.totalExerciseTime;
     }
 
     public double getTotalElevation() {
@@ -60,10 +58,6 @@ public class GPXStatistics implements Serializable {
         this.totalDistance = totalDistance;
     }
 
-    public void setAverageSpeed(double averageSpeed) {
-        this.averageSpeed = averageSpeed;
-    }
-
     public void setTotalElevation(double totalElevation) {
         this.totalElevation = totalElevation;
     }
@@ -71,9 +65,9 @@ public class GPXStatistics implements Serializable {
     public void setTotalExerciseTime(int totalExerciseTime) {
         this.totalExerciseTime = totalExerciseTime;
     }
-
+z
     @Override
     public String toString(){
-        return ("{ User : " + this.user + ", Total Distance : " + (double) Math.round(this.totalDistance) / 1000 + " (km), Average Speed : " + Math.round(this.averageSpeed * 10) / 10 + " (m/s), Total Elevation : " + (int) this.totalElevation + " (m), Total Exercise Time : " + this.getTotalExerciseTime() + " (hh:mm:ss) }");
+        return ("{ User : " + this.user + ", Total Distance : " + (double) Math.round(this.totalDistance) / 1000 + " (km), Average Speed : " + this.getAverageSpeed()  + " (m/s), Total Elevation : " + (int) this.totalElevation + " (m), Total Exercise Time : " + this.getTotalExerciseTime() + " (hh:mm:ss) }");
     }
 }

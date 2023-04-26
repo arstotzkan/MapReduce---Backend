@@ -128,7 +128,6 @@ public class MasterRequestHandler extends Thread {
 	public GPXStatistics reduce(ArrayList<GPXStatistics> chunks){
 		String username = chunks.get(0).getUser();
 		double totDist = 0.0;
-		double avgSpd = 0.0;
 		double totEle = 0.0;
 		int totExTime = 0;
 
@@ -136,12 +135,9 @@ public class MasterRequestHandler extends Thread {
 			totDist += currStat.getTotalDistance();
 			totEle += currStat.getTotalElevation();
 			totExTime += currStat.getTotalExerciseTimeInSeconds();
-			avgSpd += currStat.getAverageSpeed();
 		}
 
-		avgSpd = avgSpd / chunks.size(); //maybe this needs some work, cba doing maths while hangover (maybe needs some weights)
-
-		return new GPXStatistics(username, totDist, avgSpd, totEle, totExTime);
+		return new GPXStatistics(username, totDist, totEle, totExTime);
 	}
 
 }
