@@ -8,11 +8,11 @@ import java.text.SimpleDateFormat;
 
 public class GPXWaypoint implements Serializable {
 
-    private String user;
-    private double latitude;
-    private double longitude;
-    private double elevation;
-    private Date datetime;
+    private final String user;
+    private final double latitude;
+    private final double longitude;
+    private final double elevation;
+    private final Date datetime;
 
     public GPXWaypoint(String username, double latitude, double longitude, double elevation, Date datetime) {
         this.user =  username;

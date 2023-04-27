@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class GPXStatistics implements Serializable {
 
-    private String user;
-    private double totalDistance;
-    private double totalElevation;
-    private int totalExerciseTime;
+    private final String user;
+    private final double totalDistance;
+    private final double totalElevation;
+    private final int totalExerciseTime;
 
     public GPXStatistics(String username, double totalDistance, double totalElevation, int totalExerciseTime) {
         this.user = username;
@@ -51,22 +51,8 @@ public class GPXStatistics implements Serializable {
         return totalExerciseTime;
     }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
-    public void setTotalDistance(double totalDistance) {
-        this.totalDistance = totalDistance;
-    }
-
-    public void setTotalElevation(double totalElevation) {
-        this.totalElevation = totalElevation;
-    }
-
-    public void setTotalExerciseTime(int totalExerciseTime) {
-        this.totalExerciseTime = totalExerciseTime;
-    }
     @Override
     public String toString(){
-        return ("{ User : " + this.user + ", Total Distance : " + (double) Math.round(this.totalDistance) / 1000 + " (km), Average Speed : " + this.getAverageSpeed()  + " (m/s), Total Elevation : " + (int) this.totalElevation + " (m), Total Exercise Time : " + this.getTotalExerciseTime() + " (hh:mm:ss) }");
+        return ("{ User : " + this.user + ", Total Distance : " + (double) Math.round(this.totalDistance) / 1000 + " (km), Average Speed : " + (double) Math.round(this.getAverageSpeed() * 100) / 100  + " (m/s), Total Elevation : " + (int) this.totalElevation + " (m), Total Exercise Time : " + this.getTotalExerciseTime() + " (hh:mm:ss) }");
     }
 }
