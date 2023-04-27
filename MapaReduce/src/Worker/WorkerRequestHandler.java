@@ -93,9 +93,8 @@ public class WorkerRequestHandler extends Thread {
             previousWaypoint = currentWaypoint;
         }
         double totalElevation = gain - loss;
-        double averageSpeed = totalDistance / totalExerciseTime;
 
-        return new GPXStatistics(username, totalDistance, averageSpeed, totalElevation, totalExerciseTime);
+        return new GPXStatistics(username, totalDistance, totalElevation, totalExerciseTime);
     }
 
 }
