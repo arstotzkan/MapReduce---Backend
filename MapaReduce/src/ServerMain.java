@@ -14,7 +14,7 @@ public class ServerMain {
         }
         new MasterServer(numberOfWorkers).start();
         for (int i = 0; i < numberOfWorkers; i++){
-            new Worker(6001 + i).start(); //init
+            new Worker(60001 + i).start(); //init
         }
 
     }

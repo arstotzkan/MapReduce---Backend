@@ -19,7 +19,7 @@ public class MasterRequestHandler extends Thread {
 	ObjectOutputStream out;
 	String sender;
 
-	final int WAYPOINTS_PER_CHUNK = 5;
+	final int WAYPOINTS_PER_CHUNK = 4;
 	int numberOfWorkers;
 
 	public MasterRequestHandler(Socket connection , int numberOfWorkers) {
@@ -44,7 +44,7 @@ public class MasterRequestHandler extends Thread {
 			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>(); //this is where we store final stats
 
 			for (int i = 0; i < workerThreads.length; i++){
-				int workerPort = 6001 + (i % this.numberOfWorkers);
+				int workerPort = 60001 + (i % this.numberOfWorkers);
 				//implementing round robin here
 				//however data might be sent in a different order due to multithreading
 				workerThreads[i] = new RequestToWorker(workerPort , listOfChunks.get(i));

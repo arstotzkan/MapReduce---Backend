@@ -21,7 +21,7 @@ public class MasterServer extends Thread{
 		try {
 
 			/* Create Server Socket */
-			socketForUsers = new ServerSocket(6000, 100); //socket for users
+			socketForUsers = new ServerSocket(60000, 100); //socket for users
 			System.out.println("Server ready...");
 
 			while (true) {

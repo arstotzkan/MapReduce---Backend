@@ -20,8 +20,8 @@ public class UserClient extends Thread {
 
 		try {
 			String host = "localhost";
-			/* Create socket for contacting the server on port 6000*/
-			requestSocket = new Socket(host,6000);
+			/* Create socket for contacting the server on port 60000*/
+			requestSocket = new Socket(host,60000);
 
 			/* Create the streams to send and receive data from server */
 			out = new ObjectOutputStream(requestSocket.getOutputStream());
