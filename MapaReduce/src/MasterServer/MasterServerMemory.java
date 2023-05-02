@@ -1,16 +1,26 @@
 package MasterServer;
 
 import utils.GPXStatistics;
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
 
+/**
+ Returns an ArrayList of statistics read from a .csv file
+ @Author Electra FabCap
+
+ **/
+
 public class MasterServerMemory {
 
-    public ArrayList<GPXStatistics> getArrayOfStatistics() {
-        ArrayList<GPXStatistics> statistics = new ArrayList<>();
+    public MasterServerMemory(){
+        //this is a constructor and I'm not sure what to do with it, here take it
+    }
+
+    ArrayList<GPXStatistics> statistics = new ArrayList<>();
+    public void getArrayOfStatistics() {
+
         try{
             File csv_file= new File("src/utils/statistics.csv");
             Scanner scanner= new Scanner(csv_file);
@@ -25,7 +35,6 @@ public class MasterServerMemory {
             System.out.println("File not Found");
         }
 
-        return statistics;
 
     }
 
