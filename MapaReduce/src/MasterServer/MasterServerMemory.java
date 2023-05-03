@@ -18,12 +18,12 @@ public class MasterServerMemory {
 
     /**
      * A simple method that iterates through the list of saved GPXStatistics,
-     * keeps and aggregates the ones that are made by a certain user and
+     * keeps and aggregates the ones that are made by a certain user
      *
      * @param username the name of the user for whom we're trying to get stats
      * @return a GPXStatistics object with the user's total stats
      */
-    public GPXStatistics getStatsForUser(String username){
+    public GPXStatistics getTotalStatsForUser(String username){
         double totDist = 0.0;
         double totEle = 0.0;
         int totExTime = 0;
@@ -37,6 +37,30 @@ public class MasterServerMemory {
         }
 
         return new GPXStatistics(username, totDist, totEle, totExTime);
+    }
+
+    /**
+     * A simple method that iterates through the list of saved GPXStatistics,
+     * keeps and averages out the ones that are made by a certain user
+     *
+     * @param username the name of the user for whom we're trying to get stats
+     * @return a GPXStatistics object with the user's average stats
+     */
+    public GPXStatistics getAverageStatsForUser(String username){
+        double totDist = 0.0;
+        double totEle = 0.0;
+        int totExTime = 0;
+        int counter = 0;
+        for (GPXStatistics currStat : this.statistics) {
+            if (currStat.getUser().equals(username)){
+                totDist += currStat.getTotalDistance();
+                totEle += currStat.getTotalElevation();
+                totExTime += currStat.getTotalExerciseTimeInSeconds();
+                counter += 1;
+            }
+        }
+
+        return new GPXStatistics(username, totDist/counter, totEle/counter, totExTime/counter);
     }
 
     public ArrayList<GPXStatistics> getArrayOfStatistics() {
