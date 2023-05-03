@@ -9,6 +9,36 @@ import java.io.File;
 
 public class MasterServerMemory {
 
+    //TODO: merge getArrayOfStatistics with constructor since it will literally never be used anywhere else
+    private ArrayList<GPXStatistics> statistics; //TODO: probably need to make this static but that requires a minor refactor on code that isnt only mine
+
+    public MasterServerMemory(){
+        this.statistics=getArrayOfStatistics();
+    }
+
+    /**
+     * A simple method that iterates through the list of saved GPXStatistics,
+     * keeps and aggregates the ones that are made by a certain user and
+     *
+     * @param username the name of the user for whom we're trying to get stats
+     * @return a GPXStatistics object with the user's total stats
+     */
+    public GPXStatistics getStatsForUser(String username){
+        double totDist = 0.0;
+        double totEle = 0.0;
+        int totExTime = 0;
+
+        for (GPXStatistics currStat : this.statistics) {
+            if (currStat.getUser().equals(username)){
+                totDist += currStat.getTotalDistance();
+                totEle += currStat.getTotalElevation();
+                totExTime += currStat.getTotalExerciseTimeInSeconds();
+            }
+        }
+
+        return new GPXStatistics(username, totDist, totEle, totExTime);
+    }
+
     public ArrayList<GPXStatistics> getArrayOfStatistics() {
         ArrayList<GPXStatistics> statistics = new ArrayList<>();
         try{
@@ -43,6 +73,14 @@ public class MasterServerMemory {
 
 
 
+    }
+
+    public ArrayList<GPXStatistics> getStatistics(){
+        return this.statistics;
+    }
+
+    public void addStatistic(GPXStatistics stat){
+        this.statistics.add(stat);
     }
 
 }
