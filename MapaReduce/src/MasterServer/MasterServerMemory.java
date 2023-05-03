@@ -46,7 +46,7 @@ public class MasterServerMemory {
      * @param username the name of the user for whom we're trying to get stats
      * @return a GPXStatistics object with the user's average stats
      */
-    public GPXStatistics getAverageStatsForUser(String username){
+    public GPXStatistics getAverageStatsForUser(String username) throws Exception {
         double totDist = 0.0;
         double totEle = 0.0;
         int totExTime = 0;
@@ -58,6 +58,10 @@ public class MasterServerMemory {
                 totExTime += currStat.getTotalExerciseTimeInSeconds();
                 counter += 1;
             }
+        }
+
+        if (counter == 0){
+            throw new Exception("There are no records of said user");
         }
 
         return new GPXStatistics(username, totDist/counter, totEle/counter, totExTime/counter);
