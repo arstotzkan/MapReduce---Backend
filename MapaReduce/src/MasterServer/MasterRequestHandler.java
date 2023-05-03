@@ -22,11 +22,14 @@ public class MasterRequestHandler extends Thread {
 	final int WAYPOINTS_PER_CHUNK = 4;
 	int numberOfWorkers;
 
-	public MasterRequestHandler(Socket connection , int numberOfWorkers) {
+	MasterServerMemory memory;
+
+	public MasterRequestHandler(Socket connection , int numberOfWorkers, MasterServerMemory m) {
 		try {
 			this.out = new ObjectOutputStream(connection.getOutputStream());
 			this.in = new ObjectInputStream(connection.getInputStream());
 			this.sender =  connection.getRemoteSocketAddress().toString();
+			this.memory = m;
 
 			this.numberOfWorkers = numberOfWorkers;
 		} catch (IOException e) {
@@ -59,6 +62,7 @@ public class MasterRequestHandler extends Thread {
 
 			//reduce
 			GPXStatistics stats = reduce(finalStats); //send final stats to user
+			memory.addStatistic(stats);
 			System.out.println("User " + this.sender + " got: " + stats.toString());
 			out.writeObject(stats);
 			out.flush();

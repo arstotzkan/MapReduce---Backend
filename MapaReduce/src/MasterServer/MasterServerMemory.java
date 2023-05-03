@@ -9,11 +9,11 @@ import java.io.File;
 
 public class MasterServerMemory {
 
-    //TODO: merge getArrayOfStatistics with constructor since it will literally never be used anywhere else
+    //TODO: merge loadData with constructor since it will literally never be used anywhere else
     private ArrayList<GPXStatistics> statistics; //TODO: probably need to make this static but that requires a minor refactor on code that isnt only mine
 
     public MasterServerMemory(){
-        this.statistics=getArrayOfStatistics();
+        this.statistics=loadData();
     }
 
     /**
@@ -105,7 +105,9 @@ public class MasterServerMemory {
         return new GPXStatistics("AverageStatistics", totDist/counter, totEle/counter, totExTime/counter);
     }
 
-    public ArrayList<GPXStatistics> getArrayOfStatistics() {
+
+    public ArrayList<GPXStatistics> loadData() {
+
         ArrayList<GPXStatistics> statistics = new ArrayList<>();
         try{
             File csv_file= new File("src/utils/statistics.csv");
@@ -137,8 +139,6 @@ public class MasterServerMemory {
             rowScanner.close();
             return statistics;
 
-
-
     }
 
     public ArrayList<GPXStatistics> getStatistics(){
@@ -147,6 +147,7 @@ public class MasterServerMemory {
 
     public void addStatistic(GPXStatistics stat){
         this.statistics.add(stat);
+        System.out.println(this.statistics.size());
     }
 
 }
