@@ -128,7 +128,7 @@ public class MasterServerMemory {
             System.out.println("File not Found");
         }
 
-
+        return statistics;
     }
 
     private GPXStatistics getStatisticsFromLine(String l) {
