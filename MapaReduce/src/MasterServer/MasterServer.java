@@ -23,11 +23,12 @@ public class MasterServer extends Thread{
 			/* Create Server Socket */
 			socketForUsers = new ServerSocket(60000, 100); //socket for users
 			System.out.println("Server ready...");
+			MasterServerMemory memory = new MasterServerMemory();
 
 			while (true) {
 				/* Accept the connection */
 				userProviderSocket = socketForUsers.accept();
-				Thread userThread = new MasterRequestHandler(userProviderSocket, numberOfWorkers);
+				Thread userThread = new MasterRequestHandler(userProviderSocket, numberOfWorkers, memory);
 				userThread.start();
 			}
 
