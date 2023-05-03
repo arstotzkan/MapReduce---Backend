@@ -67,6 +67,44 @@ public class MasterServerMemory {
         return new GPXStatistics(username, totDist/counter, totEle/counter, totExTime/counter);
     }
 
+    /**
+     * A method that returns the total stats of all users
+     *
+     * @return a GPXStatistics object containing the total stats
+     */
+    public GPXStatistics getTotalStats(){
+        double totDist = 0.0;
+        double totEle = 0.0;
+        int totExTime = 0;
+        for (GPXStatistics currStat : this.statistics) {
+            totDist += currStat.getTotalDistance();
+            totEle += currStat.getTotalElevation();
+            totExTime += currStat.getTotalExerciseTimeInSeconds();
+        }
+
+        return new GPXStatistics("TotalStatistics", totDist, totEle, totExTime);
+    }
+
+    /**
+     * A method that returns the average stats of all users
+     *
+     * @return a GPXStatistics object containing the average stats
+     */
+    public GPXStatistics getAverageStats(){
+        double totDist = 0.0;
+        double totEle = 0.0;
+        int totExTime = 0;
+        int counter = 0;
+        for (GPXStatistics currStat : this.statistics) {
+            totDist += currStat.getTotalDistance();
+            totEle += currStat.getTotalElevation();
+            totExTime += currStat.getTotalExerciseTimeInSeconds();
+            counter += 1;
+        }
+
+        return new GPXStatistics("AverageStatistics", totDist/counter, totEle/counter, totExTime/counter);
+    }
+
     public ArrayList<GPXStatistics> getArrayOfStatistics() {
         ArrayList<GPXStatistics> statistics = new ArrayList<>();
         try{
