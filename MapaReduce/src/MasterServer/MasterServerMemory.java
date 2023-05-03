@@ -117,7 +117,7 @@ public class MasterServerMemory {
         try{
             File csv_file= new File("src/gpxs/statistics.csv");
             Scanner scanner= new Scanner(csv_file);
-
+                scanner.nextLine(); //ignore headers
                 while (scanner.hasNextLine()) {
                     statistics.add(getStatisticsFromLine(scanner.nextLine()));
                 }

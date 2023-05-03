@@ -31,7 +31,7 @@ public class MasterServer extends Thread{
 				userThread.start();
 			}
 
-		} catch (Exception ioException) {
+		} catch (IOException ioException) {
 			ioException.printStackTrace();
 		} finally {
 			try {
