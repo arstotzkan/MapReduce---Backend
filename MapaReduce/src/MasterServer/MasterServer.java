@@ -19,11 +19,10 @@ public class MasterServer extends Thread{
 	}
 	public void openServer() {
 		try {
-
+			MasterServerMemory memory = new MasterServerMemory();
 			/* Create Server Socket */
 			socketForUsers = new ServerSocket(60000, 100); //socket for users
 			System.out.println("Server ready...");
-			MasterServerMemory memory = new MasterServerMemory();
 
 			while (true) {
 				/* Accept the connection */
@@ -32,7 +31,7 @@ public class MasterServer extends Thread{
 				userThread.start();
 			}
 
-		} catch (IOException ioException) {
+		} catch (Exception ioException) {
 			ioException.printStackTrace();
 		} finally {
 			try {

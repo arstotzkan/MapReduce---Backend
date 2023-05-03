@@ -115,7 +115,7 @@ public class MasterServerMemory {
 
         ArrayList<GPXStatistics> statistics = new ArrayList<>();
         try{
-            File csv_file= new File("src/utils/statistics.csv");
+            File csv_file= new File("src/gpxs/statistics.csv");
             Scanner scanner= new Scanner(csv_file);
 
                 while (scanner.hasNextLine()) {
@@ -134,11 +134,12 @@ public class MasterServerMemory {
     private GPXStatistics getStatisticsFromLine(String l) {
 
         Scanner rowScanner= new Scanner(l);
+        System.out.println(l);
         rowScanner.useDelimiter(",");
             String username= rowScanner.next();
-            double totalDistance=rowScanner.nextDouble();
-            double totalElevation=rowScanner.nextDouble();
-            int totalExerciseTime=rowScanner.nextInt();
+            double totalDistance= rowScanner.nextDouble();
+            double totalElevation= rowScanner.nextDouble();
+            int totalExerciseTime= rowScanner.nextInt();
             GPXStatistics statistics= new GPXStatistics(username, totalDistance, totalElevation, totalExerciseTime);
             rowScanner.close();
             return statistics;
