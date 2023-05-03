@@ -133,7 +133,7 @@ public class MasterServerMemory {
 
     private GPXStatistics getStatisticsFromLine(String l) {
 
-        Scanner rowScanner= new Scanner(l);
+        /*Scanner rowScanner= new Scanner(l);
         System.out.println(l);
         rowScanner.useDelimiter(",");
             String username= rowScanner.next();
@@ -141,7 +141,14 @@ public class MasterServerMemory {
             double totalElevation= rowScanner.nextDouble();
             int totalExerciseTime= rowScanner.nextInt();
             GPXStatistics statistics= new GPXStatistics(username, totalDistance, totalElevation, totalExerciseTime);
-            rowScanner.close();
+            rowScanner.close();*/
+
+            String[] stats_str= l.split(",");
+            String username= stats_str[0];
+            double totalDistance= Double.parseDouble(stats_str[1]);
+            double totalElevation= Double.parseDouble(stats_str[2]);
+            int totalExerciseTime= Integer.parseInt(stats_str[3]);
+            GPXStatistics statistics= new GPXStatistics(username, totalDistance, totalElevation, totalExerciseTime);
             return statistics;
 
     }
