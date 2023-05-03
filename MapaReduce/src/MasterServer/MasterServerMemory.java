@@ -1,11 +1,16 @@
 package MasterServer;
 
 import utils.GPXStatistics;
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
+
+/**
+ Returns an ArrayList of statistics read from a .csv file
+ @Author Electra FabCap
+
+ **/
 
 public class MasterServerMemory {
 
@@ -123,7 +128,6 @@ public class MasterServerMemory {
             System.out.println("File not Found");
         }
 
-        return statistics;
 
     }
 
