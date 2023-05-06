@@ -2,6 +2,7 @@ package UserClient;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 
 import utils.GPXFile;
 import utils.GPXStatistics;
@@ -31,8 +32,13 @@ public class UserClient extends Thread {
 			out.writeObject(file);
 			out.flush();
 			/* Print the received result from server */
-			GPXStatistics stats = (GPXStatistics) in.readObject();
-			System.out.println("Result: " + stats.toString() + "\n");
+			HashMap<String,GPXStatistics> res = (HashMap<String,GPXStatistics>) in.readObject();
+			GPXStatistics currentWalkStats = res.get("currentRun");
+			GPXStatistics userAverage = res.get("userAverage");
+			GPXStatistics totalAverage = res.get("totalAverage");
+			System.out.println("Current Walk: " + currentWalkStats.toString());
+			System.out.println("User Average: " + userAverage.toString());
+			System.out.println("Total Average: " + totalAverage.toString() + "\n");
 
 		} catch (UnknownHostException unknownHost) {
 			System.err.println("You are trying to connect to an unknown host!");

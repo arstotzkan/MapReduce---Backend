@@ -4,11 +4,10 @@ package MasterServer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import utils.GPXFile;
 import utils.GPXParser;
 import utils.GPXStatistics;
@@ -64,13 +63,21 @@ public class MasterRequestHandler extends Thread {
 			GPXStatistics stats = reduce(finalStats); //send final stats to user
 			memory.addStatistic(stats);
 			System.out.println("User " + this.sender + " got: " + stats.toString());
-			out.writeObject(stats);
+
+			HashMap<String, GPXStatistics> res = new HashMap<String, GPXStatistics>();
+			res.put("currentRun" , stats);
+			res.put("userAverage" , memory.getAverageStatsForUser(stats.getUser()));
+			res.put("totalAverage" , memory.getAverageStats());
+
+			out.writeObject(res);
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
 			try {
