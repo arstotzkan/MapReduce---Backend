@@ -62,12 +62,15 @@ public class MasterRequestHandler extends Thread {
 			//reduce
 			GPXStatistics stats = reduce(finalStats); //send final stats to user
 			memory.addStatistic(stats);
-			System.out.println("User " + this.sender + " got: " + stats.toString());
 
 			HashMap<String, GPXStatistics> res = new HashMap<String, GPXStatistics>();
 			res.put("currentRun" , stats);
 			res.put("userAverage" , memory.getAverageStatsForUser(stats.getUser()));
 			res.put("totalAverage" , memory.getAverageStats());
+
+			System.out.println("User " + this.sender + " got (for this walk): " + res.get("currentRun").toString());
+			System.out.println("User " + this.sender + " got (user average): " + res.get("userAverage").toString());
+			System.out.println("User " + this.sender + " got (total average): " + res.get("totalAverage").toString());
 
 			out.writeObject(res);
 			out.flush();
