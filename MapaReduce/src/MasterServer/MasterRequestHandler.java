@@ -46,7 +46,7 @@ public class MasterRequestHandler extends Thread {
 			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>(); //this is where we store final stats
 
 			for (int i = 0; i < workerThreads.length; i++){
-				int workerPort = 60001 + (i % this.numberOfWorkers);
+				int workerPort = 60012 + (i % this.numberOfWorkers);
 				//implementing round robin here
 				//however data might be sent in a different order due to multithreading
 				workerThreads[i] = new RequestToWorker(workerPort , listOfChunks.get(i));

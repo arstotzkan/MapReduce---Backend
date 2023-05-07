@@ -1,6 +1,7 @@
 package Worker;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -33,7 +34,11 @@ public class Worker extends Thread {
                 masterThread.start();
             }
 
-        } catch (IOException ioException) {
+        } catch (BindException bE){
+            System.out.println("The bind error is here: " + this.port);
+        }
+
+        catch (IOException ioException) {
             ioException.printStackTrace();
         } finally {
             try {
