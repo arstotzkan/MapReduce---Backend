@@ -28,11 +28,10 @@ public class RequestToWorker extends Thread{
     public void run(){
         ObjectOutputStream out= null ;
         ObjectInputStream in = null ;
-        String host = this.ip;
         try {
 
             /* Create socket for contacting the server on port*/
-            this.connection = new Socket(host,this.port);
+            this.connection = new Socket(this.ip ,this.port);
 
             /* Create the streams to send and receive data from server */
             out = new ObjectOutputStream(this.connection.getOutputStream());
