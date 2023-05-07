@@ -9,8 +9,10 @@ import utils.GPXStatistics;
 
 public class UserClient extends Thread {
 	String filename;
-	public UserClient(String filename) {
+	String ip;
+	public UserClient(String filename, String ip) {
 		this.filename = filename;
+		this.ip = ip;
 	}
 
 	public void run() {
@@ -20,9 +22,8 @@ public class UserClient extends Thread {
 
 
 		try {
-			String host = "localhost";
 			/* Create socket for contacting the server on port 60000*/
-			requestSocket = new Socket(host,60000);
+			requestSocket = new Socket(this.ip,60000);
 
 			/* Create the streams to send and receive data from server */
 			out = new ObjectOutputStream(requestSocket.getOutputStream());

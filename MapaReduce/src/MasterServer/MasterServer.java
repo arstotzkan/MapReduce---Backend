@@ -9,9 +9,11 @@ public class MasterServer extends Thread{
 	/* Define the socket that is used to handle the connection */
 	Socket userProviderSocket;
 	final int numberOfWorkers;
+	final String workerIP;
 
-	public MasterServer(int numberOfWorkers) {
+	public MasterServer(int numberOfWorkers, String workerIP) {
 		this.numberOfWorkers = numberOfWorkers;
+		this.workerIP = workerIP;
 	}
 
 	public void run(){
@@ -27,7 +29,7 @@ public class MasterServer extends Thread{
 			while (true) {
 				/* Accept the connection */
 				userProviderSocket = socketForUsers.accept();
-				Thread userThread = new MasterRequestHandler(userProviderSocket, numberOfWorkers, memory);
+				Thread userThread = new MasterRequestHandler(userProviderSocket, this.numberOfWorkers, this.workerIP , memory);
 				userThread.start();
 			}
 

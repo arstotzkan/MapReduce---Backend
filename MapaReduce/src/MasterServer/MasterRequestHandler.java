@@ -20,10 +20,10 @@ public class MasterRequestHandler extends Thread {
 
 	final int WAYPOINTS_PER_CHUNK = 4;
 	int numberOfWorkers;
-
+	String workerIP;
 	MasterServerMemory memory;
 
-	public MasterRequestHandler(Socket connection , int numberOfWorkers, MasterServerMemory m) {
+	public MasterRequestHandler(Socket connection , int numberOfWorkers, String workerIP, MasterServerMemory m) {
 		try {
 			this.out = new ObjectOutputStream(connection.getOutputStream());
 			this.in = new ObjectInputStream(connection.getInputStream());
@@ -31,6 +31,7 @@ public class MasterRequestHandler extends Thread {
 			this.memory = m;
 
 			this.numberOfWorkers = numberOfWorkers;
+			this.workerIP = workerIP;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -49,7 +50,7 @@ public class MasterRequestHandler extends Thread {
 				int workerPort = 60012 + (i % this.numberOfWorkers);
 				//implementing round robin here
 				//however data might be sent in a different order due to multithreading
-				workerThreads[i] = new RequestToWorker(workerPort , listOfChunks.get(i));
+				workerThreads[i] = new RequestToWorker(this.workerIP, workerPort , listOfChunks.get(i));
 				workerThreads[i].start();
 			}
 

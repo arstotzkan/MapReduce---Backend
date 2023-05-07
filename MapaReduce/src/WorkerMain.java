@@ -3,7 +3,7 @@ import Worker.Worker;
 
 import java.util.Scanner;
 
-public class ServerMain {
+public class WorkerMain {
     public static void main(String args[]) {
 
         int numberOfWorkers;
@@ -18,10 +18,8 @@ public class ServerMain {
             }
         }
 
-        Scanner scanner2 = new Scanner(System.in);
-        System.out.println("Set IP address of workers:");
-        String workerIP = scanner2.nextLine(); //taking number of workers from args
-
-        new MasterServer(numberOfWorkers, workerIP).start();
+        for (int i = 0; i < numberOfWorkers; i++){
+            new Worker(60012 + i).start(); //init
+        }
     }
 }

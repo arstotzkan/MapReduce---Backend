@@ -8,11 +8,15 @@ public class UserMain {
         String name = "route";
         String suf = ".gpx";
 
+        Scanner myObj = new Scanner(System.in);
+        System.out.println("Set server IP: ");
+        String ip = myObj.nextLine(); // Read user input
+
         while(true){
 
             int fileNum = -1;
             while (fileNum < 0 || fileNum > 6){
-                Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+                  // Create a Scanner object
                 System.out.println("Select file from 1-6\n(Press 0 to exit)");
                 fileNum = myObj.nextInt(); // Read user input
             }
@@ -20,7 +24,7 @@ public class UserMain {
             if (fileNum == 0) //exit
                 break;
             else // read
-                new UserClient(dirs + name + fileNum + suf).run();
+                new UserClient(dirs + name + fileNum + suf, ip).run();
         }
 
     }

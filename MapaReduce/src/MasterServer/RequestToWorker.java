@@ -14,11 +14,13 @@ import java.util.ArrayList;
 public class RequestToWorker extends Thread{
 
     Socket connection;
+    String ip;
     int port;
     ArrayList<GPXWaypoint> chunk;
     GPXStatistics result = null;
 
-    public RequestToWorker(int port, ArrayList<GPXWaypoint> chunk) {
+    public RequestToWorker(String ip, int port, ArrayList<GPXWaypoint> chunk) {
+        this.ip = ip;
         this.port = port;
         this.chunk = chunk;
     }
@@ -26,7 +28,7 @@ public class RequestToWorker extends Thread{
     public void run(){
         ObjectOutputStream out= null ;
         ObjectInputStream in = null ;
-        String host = "localhost";
+        String host = this.ip;
         try {
 
             /* Create socket for contacting the server on port*/
