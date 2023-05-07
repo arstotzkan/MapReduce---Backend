@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class RequestToWorker extends Thread{
 
     Socket connection;
-    String ip;
-    int port;
+    final String ip;
+    final int port;
     ArrayList<GPXWaypoint> chunk;
     GPXStatistics result = null;
 

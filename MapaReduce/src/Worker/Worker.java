@@ -11,7 +11,7 @@ public class Worker extends Thread {
     ServerSocket server;
     /* Define the socket that is used to handle the connection */
     Socket connection;
-    int port;
+    final int port;
 
     public Worker(int port) {
         this.port = port;

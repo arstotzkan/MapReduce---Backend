@@ -8,8 +8,8 @@ import utils.GPXFile;
 import utils.GPXStatistics;
 
 public class UserClient extends Thread {
-	String filename;
-	String serverIP;
+	final String filename;
+	final String serverIP;
 	public UserClient(String filename, String ip) {
 		this.filename = filename;
 		this.serverIP = ip;
