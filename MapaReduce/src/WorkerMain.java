@@ -12,9 +12,9 @@ public class WorkerMain {
         } else {
             numberOfWorkers = -1;
             while (numberOfWorkers < 1 || numberOfWorkers > 1000) {
-                Scanner myObj = new Scanner(System.in);
+                Scanner scanner = new Scanner(System.in);
                 System.out.println("Set number of workers (1-1000) :");
-                numberOfWorkers = myObj.nextInt(); //taking number of workers from args
+                numberOfWorkers = scanner.nextInt(); //taking number of workers from args
             }
         }
 
