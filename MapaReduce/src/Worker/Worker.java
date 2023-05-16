@@ -11,11 +11,8 @@ public class Worker extends Thread {
     ServerSocket server;
     /* Define the socket that is used to handle the connection */
     Socket connection;
-    final int port;
 
-    public Worker(int port) {
-        this.port = port;
-    }
+    public Worker() {}
 
     public void run(){
         this.openServer();
@@ -25,8 +22,8 @@ public class Worker extends Thread {
         try {
 
             /* Create Server Socket */
-            this.server = new ServerSocket(this.port, 100);
-            System.out.println("Worker @ port " + this.port + " ready...");
+            this.server = new ServerSocket(0, 100);
+            System.out.println("Worker @ port " + this.server.getLocalPort() + " ready...");
 
             while (true) {
                 this.connection = this.server.accept();
@@ -35,7 +32,7 @@ public class Worker extends Thread {
             }
 
         } catch (BindException bE){
-            System.out.println("The bind error is here: " + this.port);
+            System.out.println("The bind error is here: " + this.server.getLocalPort());
         }
 
         catch (IOException ioException) {
