@@ -22,11 +22,8 @@ public class RunMultipleWorkersFromSameDevice {
         scanner.nextLine();
         String masterIP = scanner.nextLine(); //taking number of workers from args
 
-        System.out.println("Set port of master: ");
-        int masterPort = scanner.nextInt(); //taking number of workers from args
-
         for (int i = 0; i < numberOfWorkers; i++){
-            new Worker(masterIP, masterPort).start(); //init
+            new Worker(masterIP, 60000).start(); //init
         }
     }
 }

@@ -38,13 +38,13 @@ public class RequestToWorker extends Thread{
             out = new ObjectOutputStream(this.connection.getOutputStream());
             in = new ObjectInputStream(this.connection.getInputStream());
 
-            System.out.println("Server sent: " + chunk.toString() + " to port " + this.port);
+            System.out.println("Server sent: " + chunk.toString() + " to worker @" + this.ip  + ":" + this.port );
             out.writeObject(chunk);
             out.flush();
             /* Print the received result from server */
 
             this.result = (GPXStatistics) in.readObject();
-            System.out.println("Server got: " + result.toString() + " from port " + this.port );
+            System.out.println("Server got: " + result.toString() + " from worker @" + this.ip  + ":" + this.port );
 
         } catch (UnknownHostException unknownHost) {
             System.err.println("You are trying to connect to an unknown host!");

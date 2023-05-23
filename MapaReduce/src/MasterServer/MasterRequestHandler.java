@@ -75,10 +75,7 @@ public class MasterRequestHandler extends Thread {
 
 			} else if (obj.getClass().getSimpleName().equals("WorkerInfo")){ //if server receives WorkerInfo (aka if it receives from worker)
 				WorkerInfo info = (WorkerInfo) obj; //get worker port
-				//GET IP FROM WORKER
-				String workerIP = this.sender.split("/")[1].split(":")[0]; //get worker IP
-				System.out.println(workerIP);
-				WorkerInfo newWorker = new WorkerInfo(workerIP, info.getPort() );
+				WorkerInfo newWorker = new WorkerInfo(info.getIP(), info.getPort() );
 				workers.add(newWorker);
 				System.out.println("Added Worker @ " + newWorker.toString());
 

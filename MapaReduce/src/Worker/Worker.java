@@ -37,7 +37,8 @@ public class Worker extends Thread {
 
             Socket tempConnection = new Socket(this.masterIP, this.masterPort);
             ObjectOutputStream out = new ObjectOutputStream(tempConnection.getOutputStream());
-            out.writeObject(new WorkerInfo(null ,this.server.getLocalPort() ));
+            String workerIP = tempConnection.getInetAddress().toString().split("/")[1]; //we need raw address (without / in the start)
+            out.writeObject(new WorkerInfo(workerIP ,this.server.getLocalPort() ));
             out.flush();
             out.close();
 
