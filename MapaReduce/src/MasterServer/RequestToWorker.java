@@ -3,6 +3,7 @@ package MasterServer;
 import utils.GPXFile;
 import utils.GPXStatistics;
 import utils.GPXWaypoint;
+import utils.WorkerInfo;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,9 +20,9 @@ public class RequestToWorker extends Thread{
     ArrayList<GPXWaypoint> chunk;
     GPXStatistics result = null;
 
-    public RequestToWorker(String ip, int port, ArrayList<GPXWaypoint> chunk) {
-        this.ip = ip;
-        this.port = port;
+    public RequestToWorker(WorkerInfo worker, ArrayList<GPXWaypoint> chunk) {
+        this.ip = worker.getIP();
+        this.port = worker.getPort();
         this.chunk = chunk;
     }
 

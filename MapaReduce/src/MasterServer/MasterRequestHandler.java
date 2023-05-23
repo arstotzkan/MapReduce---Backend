@@ -8,10 +8,8 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import utils.GPXFile;
-import utils.GPXParser;
-import utils.GPXStatistics;
-import utils.GPXWaypoint;
+
+import utils.*;
 
 public class MasterRequestHandler extends Thread {
 	ObjectInputStream in;
@@ -19,19 +17,17 @@ public class MasterRequestHandler extends Thread {
 	String sender;
 
 	final int WAYPOINTS_PER_CHUNK = 4;
-	int numberOfWorkers;
-	String workerIP;
+
+	ArrayList<WorkerInfo> workers;
 	MasterServerMemory memory;
 
-	public MasterRequestHandler(Socket connection , int numberOfWorkers, String workerIP, MasterServerMemory m) {
+	public MasterRequestHandler(Socket connection , ArrayList<WorkerInfo> workers, MasterServerMemory m) {
 		try {
 			this.out = new ObjectOutputStream(connection.getOutputStream());
 			this.in = new ObjectInputStream(connection.getInputStream());
 			this.sender =  connection.getRemoteSocketAddress().toString();
 			this.memory = m;
-
-			this.numberOfWorkers = numberOfWorkers;
-			this.workerIP = workerIP;
+			this.workers = workers;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -39,42 +35,55 @@ public class MasterRequestHandler extends Thread {
 
 	public void run() {
 		try {
-			GPXFile file = (GPXFile) in.readObject(); //reading GPXFile object
-			System.out.println("User " + this.sender + " sent: " + file.getFilename());
+			Object obj = (Object) in.readObject();
+			if (obj.getClass().getSimpleName().equals("GPXFile")){ //if server receives GPXFile (aka if it receives from user)
+				GPXFile file = (GPXFile) obj; //reading GPXFile object
+				System.out.println("User " + this.sender + " sent: " + file.getFilename());
 
-			ArrayList<ArrayList<GPXWaypoint>> listOfChunks = breakFileForWorkers(file); //make a 2d list of breakpoints
-			RequestToWorker[] workerThreads = new RequestToWorker[listOfChunks.size()]; //array of threads
-			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>(); //this is where we store final stats
+				ArrayList<ArrayList<GPXWaypoint>> listOfChunks = breakFileForWorkers(file); //make a 2d list of breakpoints
+				RequestToWorker[] workerThreads = new RequestToWorker[listOfChunks.size()]; //array of threads
+				ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>(); //this is where we store final stats
 
-			for (int i = 0; i < workerThreads.length; i++){
-				int workerPort = 60012 + (i % this.numberOfWorkers);
-				//implementing round robin here
-				//however data might be sent in a different order due to multithreading
-				workerThreads[i] = new RequestToWorker(this.workerIP, workerPort , listOfChunks.get(i));
-				workerThreads[i].start();
+				for (int i = 0; i < workerThreads.length; i++){
+					//implementing round robin here
+					//however data might be sent in a different order due to multithreading
+					workerThreads[i] = new RequestToWorker(workers.get(i % workers.size()), listOfChunks.get(i));
+					workerThreads[i].start();
+				}
+
+				for (int i = 0; i < workerThreads.length; i++) {
+					//waiting for all threads to join
+					workerThreads[i].join();
+					finalStats.add(workerThreads[i].getResult()); //adding to final results
+				}
+
+				//reduce
+				GPXStatistics stats = reduce(finalStats); //send final stats to user
+				memory.addStatistic(stats);
+
+				HashMap<String, GPXStatistics> res = new HashMap<String, GPXStatistics>();
+				res.put("currentRun" , stats);
+				res.put("userAverage" , memory.getAverageStatsForUser(stats.getUser()));
+				res.put("totalAverage" , memory.getAverageStats());
+
+				System.out.println("User " + this.sender + " got (for this walk): " + res.get("currentRun").toString());
+				System.out.println("User " + this.sender + " got (user average): " + res.get("userAverage").toString());
+				System.out.println("User " + this.sender + " got (total average): " + res.get("totalAverage").toString());
+
+				out.writeObject(res);
+				out.flush();
+
+			} else if (obj.getClass().getSimpleName().equals("WorkerInfo")){ //if server receives WorkerInfo (aka if it receives from worker)
+				WorkerInfo info = (WorkerInfo) obj; //get worker port
+				//GET IP FROM WORKER
+				String workerIP = this.sender.split("/")[1].split(":")[0]; //get worker IP
+				System.out.println(workerIP);
+				WorkerInfo newWorker = new WorkerInfo(workerIP, info.getPort() );
+				workers.add(newWorker);
+				System.out.println("Added Worker @ " + newWorker.toString());
+
 			}
 
-			for (int i = 0; i < workerThreads.length; i++) {
-				//waiting for all threads to join
-				workerThreads[i].join();
-				finalStats.add(workerThreads[i].getResult()); //adding to final results
-			}
-
-			//reduce
-			GPXStatistics stats = reduce(finalStats); //send final stats to user
-			memory.addStatistic(stats);
-
-			HashMap<String, GPXStatistics> res = new HashMap<String, GPXStatistics>();
-			res.put("currentRun" , stats);
-			res.put("userAverage" , memory.getAverageStatsForUser(stats.getUser()));
-			res.put("totalAverage" , memory.getAverageStats());
-
-			System.out.println("User " + this.sender + " got (for this walk): " + res.get("currentRun").toString());
-			System.out.println("User " + this.sender + " got (user average): " + res.get("userAverage").toString());
-			System.out.println("User " + this.sender + " got (total average): " + res.get("totalAverage").toString());
-
-			out.writeObject(res);
-			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -97,6 +106,7 @@ public class MasterRequestHandler extends Thread {
 		ArrayList<GPXWaypoint> waypointList = this.breakToWaypoints(file);
 		return breakToSublists(waypointList, WAYPOINTS_PER_CHUNK);
 	}
+
 	private ArrayList<GPXWaypoint> breakToWaypoints(GPXFile file){
 		//here we split file into groups of waypoints for workers)
 
@@ -108,8 +118,7 @@ public class MasterRequestHandler extends Thread {
 			String stringData = new String(file.getContent(), StandardCharsets.UTF_8);
 			GPXParser parser = new GPXParser();
 			return parser.parseGPX(stringData);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<GPXWaypoint>();
 		}

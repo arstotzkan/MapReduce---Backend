@@ -1,7 +1,11 @@
 package Worker;
 
+import utils.WorkerInfo;
+
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.BindException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -12,7 +16,13 @@ public class Worker extends Thread {
     /* Define the socket that is used to handle the connection */
     Socket connection;
 
-    public Worker() {}
+    final String masterIP;
+    final int masterPort;
+
+    public Worker(String masterIP, int masterPort) {
+        this.masterIP = masterIP;
+        this.masterPort = masterPort;
+    }
 
     public void run(){
         this.openServer();
@@ -24,6 +34,12 @@ public class Worker extends Thread {
             /* Create Server Socket */
             this.server = new ServerSocket(0, 100);
             System.out.println("Worker @ port " + this.server.getLocalPort() + " ready...");
+
+            Socket tempConnection = new Socket(this.masterIP, this.masterPort);
+            ObjectOutputStream out = new ObjectOutputStream(tempConnection.getOutputStream());
+            out.writeObject(new WorkerInfo(null ,this.server.getLocalPort() ));
+            out.flush();
+            out.close();
 
             while (true) {
                 this.connection = this.server.accept();

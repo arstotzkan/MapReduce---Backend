@@ -1,6 +1,9 @@
 package MasterServer;
+import utils.WorkerInfo;
+
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class MasterServer extends Thread{
 
@@ -8,12 +11,10 @@ public class MasterServer extends Thread{
 	ServerSocket socketForUsers;
 	/* Define the socket that is used to handle the connection */
 	Socket userProviderSocket;
-	final int numberOfWorkers;
-	final String workerIP;
 
-	public MasterServer(int numberOfWorkers, String workerIP) {
-		this.numberOfWorkers = numberOfWorkers;
-		this.workerIP = workerIP;
+	ArrayList<WorkerInfo> workers = new ArrayList<WorkerInfo>();
+
+	public MasterServer() {
 	}
 
 	public void run(){
@@ -29,7 +30,7 @@ public class MasterServer extends Thread{
 			while (true) {
 				/* Accept the connection */
 				userProviderSocket = socketForUsers.accept();
-				Thread userThread = new MasterRequestHandler(userProviderSocket, this.numberOfWorkers, this.workerIP , memory);
+				Thread userThread = new MasterRequestHandler(userProviderSocket, this.workers , memory);
 				userThread.start();
 			}
 
