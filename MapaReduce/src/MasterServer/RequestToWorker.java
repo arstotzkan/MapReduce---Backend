@@ -3,6 +3,7 @@ package MasterServer;
 import utils.GPXFile;
 import utils.GPXStatistics;
 import utils.GPXWaypoint;
+import utils.WorkerInfo;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,9 +20,9 @@ public class RequestToWorker extends Thread{
     ArrayList<GPXWaypoint> chunk;
     GPXStatistics result = null;
 
-    public RequestToWorker(String ip, int port, ArrayList<GPXWaypoint> chunk) {
-        this.ip = ip;
-        this.port = port;
+    public RequestToWorker(WorkerInfo worker, ArrayList<GPXWaypoint> chunk) {
+        this.ip = worker.getIP();
+        this.port = worker.getPort();
         this.chunk = chunk;
     }
 
@@ -37,13 +38,13 @@ public class RequestToWorker extends Thread{
             out = new ObjectOutputStream(this.connection.getOutputStream());
             in = new ObjectInputStream(this.connection.getInputStream());
 
-            System.out.println("Server sent: " + chunk.toString() + " to port " + this.port);
+            System.out.println("Server sent: " + chunk.toString() + " to worker @" + this.ip  + ":" + this.port );
             out.writeObject(chunk);
             out.flush();
             /* Print the received result from server */
 
             this.result = (GPXStatistics) in.readObject();
-            System.out.println("Server got: " + result.toString() + " from port " + this.port );
+            System.out.println("Server got: " + result.toString() + " from worker @" + this.ip  + ":" + this.port );
 
         } catch (UnknownHostException unknownHost) {
             System.err.println("You are trying to connect to an unknown host!");
