@@ -1,4 +1,4 @@
-package MasterServer;
+package MasterServer.FileProcessing;
 
 
 import java.io.IOException;
@@ -9,9 +9,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import MasterServer.MasterServerMemory;
+import MasterServer.RequestToWorker;
 import utils.*;
 
-public class MasterRequestHandler extends Thread {
+public class FileProcessingRequestHandler extends Thread {
 	ObjectInputStream in;
 	ObjectOutputStream out;
 	String sender;
@@ -21,7 +23,7 @@ public class MasterRequestHandler extends Thread {
 	ArrayList<WorkerInfo> workers;
 	MasterServerMemory memory;
 
-	public MasterRequestHandler(Socket connection , ArrayList<WorkerInfo> workers, MasterServerMemory m) {
+	public FileProcessingRequestHandler(Socket connection , ArrayList<WorkerInfo> workers, MasterServerMemory m) {
 		try {
 			this.out = new ObjectOutputStream(connection.getOutputStream());
 			this.in = new ObjectInputStream(connection.getInputStream());
@@ -36,51 +38,41 @@ public class MasterRequestHandler extends Thread {
 	public void run() {
 		try {
 			Object obj = (Object) in.readObject();
-			if (obj.getClass().getSimpleName().equals("GPXFile")){ //if server receives GPXFile (aka if it receives from user)
-				GPXFile file = (GPXFile) obj; //reading GPXFile object
-				System.out.println("User " + this.sender + " sent: " + file.getFilename());
+			GPXFile file = (GPXFile) obj; //reading GPXFile object
+			System.out.println("User " + this.sender + " sent: " + file.getFilename());
 
-				ArrayList<ArrayList<GPXWaypoint>> listOfChunks = breakFileForWorkers(file); //make a 2d list of breakpoints
-				RequestToWorker[] workerThreads = new RequestToWorker[listOfChunks.size()]; //array of threads
-				ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>(); //this is where we store final stats
+			ArrayList<ArrayList<GPXWaypoint>> listOfChunks = breakFileForWorkers(file); //make a 2d list of breakpoints
+			RequestToWorker[] workerThreads = new RequestToWorker[listOfChunks.size()]; //array of threads
+			ArrayList<GPXStatistics> finalStats = new ArrayList<GPXStatistics>(); //this is where we store final stats
 
-				for (int i = 0; i < workerThreads.length; i++){
-					//implementing round robin here
-					//however data might be sent in a different order due to multithreading
-					workerThreads[i] = new RequestToWorker(workers.get(i % workers.size()), listOfChunks.get(i));
-					workerThreads[i].start();
-				}
-
-				for (int i = 0; i < workerThreads.length; i++) {
-					//waiting for all threads to join
-					workerThreads[i].join();
-					finalStats.add(workerThreads[i].getResult()); //adding to final results
-				}
-
-				//reduce
-				GPXStatistics stats = reduce(finalStats); //send final stats to user
-				memory.addStatistic(stats);
-
-				HashMap<String, GPXStatistics> res = new HashMap<String, GPXStatistics>();
-				res.put("currentRun" , stats);
-				res.put("userAverage" , memory.getAverageStatsForUser(stats.getUser()));
-				res.put("totalAverage" , memory.getAverageStats());
-
-				System.out.println("User " + this.sender + " got (for this walk): " + res.get("currentRun").toString());
-				System.out.println("User " + this.sender + " got (user average): " + res.get("userAverage").toString());
-				System.out.println("User " + this.sender + " got (total average): " + res.get("totalAverage").toString());
-
-				out.writeObject(res);
-				out.flush();
-
-			} else if (obj.getClass().getSimpleName().equals("WorkerInfo")){ //if server receives WorkerInfo (aka if it receives from worker)
-				WorkerInfo info = (WorkerInfo) obj; //get worker port
-				WorkerInfo newWorker = new WorkerInfo(info.getIP(), info.getPort() );
-				workers.add(newWorker);
-				System.out.println("Added Worker @ " + newWorker.toString());
-
+			for (int i = 0; i < workerThreads.length; i++){
+				//implementing round robin here
+				//however data might be sent in a different order due to multithreading
+				workerThreads[i] = new RequestToWorker(workers.get(i % workers.size()), listOfChunks.get(i));
+				workerThreads[i].start();
 			}
 
+			for (int i = 0; i < workerThreads.length; i++) {
+				//waiting for all threads to join
+				workerThreads[i].join();
+				finalStats.add(workerThreads[i].getResult()); //adding to final results
+			}
+
+			//reduce
+			GPXStatistics stats = reduce(finalStats); //send final stats to user
+			memory.addStatistic(stats);
+
+			HashMap<String, GPXStatistics> res = new HashMap<String, GPXStatistics>();
+			res.put("currentRun" , stats);
+			res.put("userAverage" , memory.getAverageStatsForUser(stats.getUser()));
+			res.put("totalAverage" , memory.getAverageStats());
+
+			System.out.println("User " + this.sender + " got (for this walk): " + res.get("currentRun").toString());
+			System.out.println("User " + this.sender + " got (user average): " + res.get("userAverage").toString());
+			System.out.println("User " + this.sender + " got (total average): " + res.get("totalAverage").toString());
+
+			out.writeObject(res);
+			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
