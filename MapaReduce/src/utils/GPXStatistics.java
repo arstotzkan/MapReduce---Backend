@@ -55,4 +55,27 @@ public class GPXStatistics implements Serializable {
     public String toString(){
         return ("{ User : " + this.user + ", Total Distance : " + (double) Math.round(this.totalDistance) / 1000 + " (km), Average Speed : " + (double) Math.round(this.getAverageSpeed() * 100) / 100  + " (m/s), Total Elevation : " + (int) this.totalElevation + " (m), Total Exercise Time : " + this.getTotalExerciseTime() + " (hh:mm:ss) }");
     }
+
+    /**
+     * Method used purely for frontend/data visualization purposes, compares a GPXStatistics file to the total
+     * @param stats2 a GPXStatistics object obtained from the server [res.get("totalStats")]
+     * @return an array with indices: 0 -> distance, 1 -> exercise time, 2 -> elevation, 3 -> average speed
+     */
+    public double[] compare(GPXStatistics stats2){
+        double[] statArray = new double[4];
+        double distancePerc = percentageComparison(stats2.getTotalDistance(), this.getTotalDistance());
+        double elevationPerc = percentageComparison(stats2.getTotalElevation(), this.getTotalElevation());
+        double timePerc = percentageComparison(stats2.getTotalExerciseTimeInSeconds(), this.getTotalExerciseTimeInSeconds());
+        double speedPerc = percentageComparison(stats2.getAverageSpeed(), this.getAverageSpeed());
+        statArray[0]=distancePerc;
+        statArray[1]=timePerc;
+        statArray[2]=elevationPerc;
+        statArray[3]=speedPerc;
+        return statArray;
+    }
+
+    private double percentageComparison(double x, double y){
+        double z = 100*((x-y)/y);
+        return (double)Math.round((z*10)/10);
+    }
 }
