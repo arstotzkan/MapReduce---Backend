@@ -36,6 +36,7 @@ public class UserStatisticsRequestHandler extends Thread{
             HashMap<String, GPXStatistics> res = new HashMap<String, GPXStatistics>();
             res.put("userAverageStats" , memory.getAverageStatsForUser(username));
             res.put("userTotalStats" , memory.getTotalStatsForUser(username));
+            res.put("totalAverageStats" , memory.getAverageStats());
             out.writeObject(res);
             out.flush();
         } catch (Exception e) {
