@@ -65,7 +65,7 @@ public class FileProcessingRequestHandler extends Thread {
 			HashMap<String, GPXStatistics> res = new HashMap<String, GPXStatistics>();
 			res.put("currentRun" , stats);
 			res.put("userAverage" , memory.getAverageStatsForUser(stats.getUser()));
-			res.put("totalAverage" , memory.getAverageStats());
+			res.put("totalAverage" , memory.getAverageWalkStats());
 
 			System.out.println("User " + this.sender + " got (for this walk): " + res.get("currentRun").toString());
 			System.out.println("User " + this.sender + " got (user average): " + res.get("userAverage").toString());
