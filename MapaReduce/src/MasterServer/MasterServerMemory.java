@@ -3,8 +3,10 @@ package MasterServer;
 import utils.GPXStatistics;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.io.File;
+import java.util.Set;
 
 /**
  Returns an ArrayList of statistics read from a .csv file
@@ -95,7 +97,7 @@ public class MasterServerMemory {
      *
      * @return a GPXStatistics object containing the average stats
      */
-    public GPXStatistics getAverageStats(){
+    public GPXStatistics getAverageWalkStats(){
         double totDist = 0.0;
         double totEle = 0.0;
         int totExTime = 0;
@@ -108,6 +110,22 @@ public class MasterServerMemory {
         }
 
         return new GPXStatistics("AverageStatistics", totDist/counter, totEle/counter, totExTime/counter);
+    }
+
+    public GPXStatistics getAverageStats(){
+        double totDist = 0.0;
+        double totEle = 0.0;
+        int totExTime = 0;
+        int counter = 0;
+        Set<String> userNames = new HashSet<String>();
+        for (GPXStatistics currStat : this.statistics) {
+            totDist += currStat.getTotalDistance();
+            totEle += currStat.getTotalElevation();
+            totExTime += currStat.getTotalExerciseTimeInSeconds();
+            userNames.add(currStat.getUser());
+        }
+
+        return new GPXStatistics("AverageStatistics", totDist/userNames.size(), totEle/userNames.size(), totExTime/userNames.size());
     }
 
 
