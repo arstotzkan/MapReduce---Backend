@@ -25,7 +25,7 @@ public class GPXStatistics implements Serializable {
     }
 
     public double getAverageSpeed() {
-        return this.totalDistance/this.totalExerciseTime;
+        return (this.totalDistance/this.totalExerciseTime)*3.6;
     }
 
     public double getTotalElevation() {
@@ -63,10 +63,10 @@ public class GPXStatistics implements Serializable {
      */
     public double[] compare(GPXStatistics stats2){
         double[] statArray = new double[4];
-        double distancePerc = percentageComparison(stats2.getTotalDistance(), this.getTotalDistance());
-        double elevationPerc = percentageComparison(stats2.getTotalElevation(), this.getTotalElevation());
-        double timePerc = percentageComparison(stats2.getTotalExerciseTimeInSeconds(), this.getTotalExerciseTimeInSeconds());
-        double speedPerc = percentageComparison(stats2.getAverageSpeed(), this.getAverageSpeed());
+        double distancePerc = percentageComparison(this.getTotalDistance(), stats2.getTotalDistance());
+        double elevationPerc = percentageComparison(this.getTotalElevation(), stats2.getTotalElevation());
+        double timePerc = percentageComparison(this.getTotalExerciseTimeInSeconds(), stats2.getTotalExerciseTimeInSeconds());
+        double speedPerc = percentageComparison(this.getAverageSpeed(), stats2.getAverageSpeed());
         statArray[0]=distancePerc;
         statArray[1]=timePerc;
         statArray[2]=elevationPerc;
@@ -75,7 +75,10 @@ public class GPXStatistics implements Serializable {
     }
 
     private double percentageComparison(double x, double y){
-        double z = 100*((x-y)/y);
-        return (double)Math.round((z*10)/10);
+        if (x==0){return 0;}
+        else{
+            double z = 100*((x-y)/y);
+            return (double)Math.round((z*10)/10);
+        }
     }
 }
